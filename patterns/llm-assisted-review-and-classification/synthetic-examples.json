@@ -1,0 +1,21 @@
+{
+  "synthetic_notice": "All data in this file is synthetic and created for demonstration purposes.",
+  "examples": [
+    {
+      "record_id": "R-001",
+      "input_summary": "Synthetic organization profile with active public updates and clear category alignment.",
+      "suggested_label": "High Fit",
+      "confidence": "Medium",
+      "rationale": "Public notes indicate strong category relevance, but reviewer confirmation is still required.",
+      "review_status": "Needs Review"
+    },
+    {
+      "record_id": "R-002",
+      "input_summary": "Synthetic profile with limited public activity and unclear positioning.",
+      "suggested_label": "Needs More Research",
+      "confidence": "Low",
+      "rationale": "Available information is insufficient for a reliable classification.",
+      "review_status": "Needs Review"
+    }
+  ]
+}

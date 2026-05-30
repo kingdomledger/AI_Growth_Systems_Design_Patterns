@@ -1,0 +1,5 @@
+synthetic_notice,lead_id,organization_name,public_profile_url,category,source_label,public_signal_summary,fit_band,confidence_level,risk_notes,review_status
+All data in this file is synthetic and created for demonstration purposes.,L-001,Northstar Studio,https://example.com/northstar-studio,Design,Public directory,Active public portfolio and clear positioning,High,Medium,None,Needs Review
+All data in this file is synthetic and created for demonstration purposes.,L-002,Blue Harbor Labs,https://example.com/blue-harbor-labs,Technology,Search result,Relevant category but limited recent updates,Medium,Low,Needs manual validation,Needs Review
+All data in this file is synthetic and created for demonstration purposes.,L-003,Maple & Co,https://example.com/maple-co,Services,Public profile,Possible duplicate of another record,Medium,Medium,Duplicate check required,Needs Review
+All data in this file is synthetic and created for demonstration purposes.,L-004,Riverlane Group,https://example.com/riverlane-group,Community,Public directory,Weak fit based on available public notes,Low,Medium,Archive unless new signal appears,Archive
