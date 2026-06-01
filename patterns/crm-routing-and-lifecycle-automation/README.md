@@ -39,7 +39,7 @@ See [mock-crm-fields.csv](mock-crm-fields.csv).
 
 ## Processing Logic
 
-Validate the minimum required fields, normalize contact details, deduplicate by stable keys, assign lifecycle status, and record the routing reason. The workflow should be idempotent so repeated submissions do not create unnecessary duplicate records.
+Validate the minimum required fields, normalize contact details, deduplicate by stable keys, assign lifecycle status, and record the routing reason. The workflow should handle repeated submissions safely, ensuring the same submission does not create unnecessary duplicate records.
 
 ## Human-in-the-Loop Controls
 
