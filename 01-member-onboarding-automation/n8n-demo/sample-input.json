@@ -9,5 +9,6 @@
   "requested_access": "member_portal",
   "review_decision": "approve",
   "admin_override": false,
-  "prior_status": "new"
+  "prior_status": "new",
+  "simulate_sync_issue": false
 }

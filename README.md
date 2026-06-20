@@ -18,7 +18,7 @@ All examples are synthetic and public-safe; no private workflow exports, real da
 
 ## Best First Clicks For Recruiters
 
-Start with [05-workflow-reliability-error-handling](./05-workflow-reliability-error-handling), then [02-lead-enrichment-outreach-system](./02-lead-enrichment-outreach-system), then [03-investor-lead-gen-agent](./03-investor-lead-gen-agent). These show reliability thinking, workflow orchestration, AI-assisted review, and agentic research.
+Start with [02-lead-enrichment-outreach-system](./02-lead-enrichment-outreach-system), then [01-member-onboarding-automation](./01-member-onboarding-automation), then the research-agent examples in [03-investor-lead-gen-agent](./03-investor-lead-gen-agent) and [04-profile-research-agent](./04-profile-research-agent). End with [05-workflow-reliability-error-handling](./05-workflow-reliability-error-handling) for reliability, incident, and replay thinking.
 
 The n8n demos are portfolio workflows built to show how I think about workflow architecture.
 

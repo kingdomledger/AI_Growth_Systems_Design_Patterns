@@ -1,5 +1,6 @@
 {
   "name": "Member Onboarding Automation Demo",
+  "id": "member-onboarding-automation-demo",
   "active": false,
   "nodes": [
     {
@@ -8,28 +9,28 @@
       "name": "Manual Demo Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [0, 240]
+      "position": [0, 360]
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "{\n  \"application_id\": \"application_001\",\n  \"submitted_at\": \"2026-06-20T09:00:00Z\",\n  \"applicant\": {\n    \"name\": \"Example Applicant\",\n    \"contact_ref\": \"contact_ref_001\",\n    \"region\": \"APAC\"\n  },\n  \"requested_access\": \"member_portal\",\n  \"review_decision\": \"approve\",\n  \"admin_override\": false,\n  \"prior_status\": \"new\"\n}"
+        "jsonOutput": "{\n  \"application_id\": \"application_001\",\n  \"submitted_at\": \"2026-06-20T09:00:00Z\",\n  \"applicant\": {\n    \"name\": \"Example Applicant\",\n    \"contact_ref\": \"contact_ref_001\",\n    \"region\": \"APAC\"\n  },\n  \"requested_access\": \"member_portal\",\n  \"review_decision\": \"approve\",\n  \"admin_override\": false,\n  \"prior_status\": \"new\",\n  \"simulate_sync_issue\": false\n}"
       },
       "id": "11111111-1111-4111-8111-111111111112",
       "name": "Application Intake Example",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [240, 240]
+      "position": [240, 360]
     },
     {
       "parameters": {
-        "jsCode": "return items.map(item => {\n  const data = item.json;\n  const contactRef = String(data.applicant.contact_ref).trim().toLowerCase();\n  return {\n    json: {\n      ...data,\n      applicant: { ...data.applicant, contact_ref: contactRef },\n      idempotency_key: `${data.application_id}:${contactRef}`,\n      normalized_at: new Date().toISOString()\n    }\n  };\n});"
+        "jsCode": "return items.map(item => {\n  const data = item.json;\n  const contactRef = String(data.applicant.contact_ref || '').trim().toLowerCase();\n  return {\n    json: {\n      ...data,\n      applicant: { ...data.applicant, contact_ref: contactRef },\n      duplicate_key: `${contactRef}:${data.requested_access}`,\n      idempotency_key: `${data.application_id}:${contactRef}`,\n      normalized_at: new Date().toISOString()\n    }\n  };\n});"
       },
       "id": "11111111-1111-4111-8111-111111111113",
-      "name": "Normalize + Idempotency Key",
+      "name": "Normalize Submission",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 240]
+      "position": [500, 360]
     },
     {
       "parameters": {
@@ -43,10 +44,10 @@
             {
               "id": "prior-status-check",
               "leftValue": "={{$json.prior_status}}",
-              "rightValue": "duplicate",
+              "rightValue": "new",
               "operator": {
                 "type": "string",
-                "operation": "equals"
+                "operation": "notEquals"
               }
             }
           ],
@@ -57,38 +58,181 @@
       "name": "Duplicate / Prior Status?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [760, 240]
+      "position": [760, 360]
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"status\": \"needs_operator_review\",\n  \"reason\": \"Duplicate or prior status found\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"status\": \"review_item_created\",\n  \"review_context\": \"new_application\",\n  \"applicant\": {{$json.applicant}},\n  \"requested_access\": \"{{$json.requested_access}}\",\n  \"review_decision\": \"{{$json.review_decision}}\",\n  \"admin_override\": {{$json.admin_override}},\n  \"simulate_sync_issue\": {{$json.simulate_sync_issue}},\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
       },
       "id": "11111111-1111-4111-8111-111111111115",
-      "name": "Route To Review Queue",
+      "name": "Create Review Item",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1020, 80]
+      "position": [1020, 500]
     },
     {
       "parameters": {
-        "jsCode": "return items.map(item => {\n  const decision = item.json.admin_override ? 'admin_override' : item.json.review_decision;\n  const routes = {\n    approve: 'grant_access',\n    reject: 'deny_access',\n    revoke: 'revoke_access',\n    admin_override: 'operator_override'\n  };\n  return { json: { ...item.json, decision, provisioning_action: routes[decision] || 'needs_review' } };\n});"
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"status\": \"review_context_updated\",\n  \"review_context\": \"existing_record\",\n  \"prior_status\": \"{{$json.prior_status}}\",\n  \"applicant\": {{$json.applicant}},\n  \"requested_access\": \"{{$json.requested_access}}\",\n  \"review_decision\": \"{{$json.review_decision}}\",\n  \"admin_override\": {{$json.admin_override}},\n  \"simulate_sync_issue\": {{$json.simulate_sync_issue}},\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
       },
       "id": "11111111-1111-4111-8111-111111111116",
-      "name": "Decision Router",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [1020, 360]
+      "name": "Update Review Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1020, 220]
     },
     {
       "parameters": {
-        "url": "https://example.invalid/provisioning/{{$json.provisioning_action}}",
+        "jsCode": "return items.map(item => {\n  const decision = item.json.admin_override ? 'admin_override' : item.json.review_decision;\n  const routeMap = {\n    approve: 'approve',\n    reject: 'reject',\n    revoke: 'revoke',\n    admin_override: 'admin_override'\n  };\n  return { json: { ...item.json, decision, decision_route: routeMap[decision] || 'review_required' } };\n});"
+      },
+      "id": "11111111-1111-4111-8111-111111111117",
+      "name": "Human Decision Router",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1280, 360]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "approve-check",
+              "leftValue": "={{$json.decision_route}}",
+              "rightValue": "approve",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "11111111-1111-4111-8111-111111111118",
+      "name": "Approve?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1540, 360]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "reject-check",
+              "leftValue": "={{$json.decision_route}}",
+              "rightValue": "reject",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "11111111-1111-4111-8111-111111111119",
+      "name": "Reject?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1800, 520]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "revoke-check",
+              "leftValue": "={{$json.decision_route}}",
+              "rightValue": "revoke",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "11111111-1111-4111-8111-111111111120",
+      "name": "Revoke?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2060, 680]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"decision\": \"approve\",\n  \"operational_record\": \"updated\",\n  \"access_action\": \"grant_access\",\n  \"requested_access\": \"{{$json.requested_access}}\",\n  \"simulate_sync_issue\": {{$json.simulate_sync_issue}},\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111121",
+      "name": "Update Operational Record",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1800, 260]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"decision\": \"reject\",\n  \"status\": \"rejection_recorded\",\n  \"notification_type\": \"application_rejected\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111122",
+      "name": "Record Rejection Outcome",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2060, 460]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"decision\": \"revoke\",\n  \"status\": \"access_disabled\",\n  \"notification_type\": \"access_revoked\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111123",
+      "name": "Disable Access State",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2320, 620]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"decision\": \"admin_override\",\n  \"status\": \"prior_decision_repaired\",\n  \"operational_record\": \"repair_ready\",\n  \"access_action\": \"grant_access\",\n  \"requested_access\": \"{{$json.requested_access}}\",\n  \"simulate_sync_issue\": {{$json.simulate_sync_issue}},\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111124",
+      "name": "Repair Prior Decision State",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2320, 820]
+    },
+    {
+      "parameters": {
+        "url": "https://example.invalid/provisioning/access-handoff",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
             {
               "name": "application_id",
               "value": "={{$json.application_id}}"
+            },
+            {
+              "name": "access_action",
+              "value": "={{$json.access_action}}"
             },
             {
               "name": "idempotency_key",
@@ -98,11 +242,11 @@
         },
         "options": {}
       },
-      "id": "11111111-1111-4111-8111-111111111117",
-      "name": "Provisioning Stub",
+      "id": "11111111-1111-4111-8111-111111111125",
+      "name": "Access Provisioning Handoff",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1280, 360],
+      "position": [2580, 360],
       "disabled": true
     },
     {
@@ -123,23 +267,73 @@
         },
         "options": {}
       },
-      "id": "11111111-1111-4111-8111-111111111118",
-      "name": "Notification Stub",
+      "id": "11111111-1111-4111-8111-111111111126",
+      "name": "Notification Handoff",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1540, 360],
+      "position": [2580, 560],
       "disabled": true
     },
     {
       "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"status\": \"completed\",\n  \"decision\": \"{{$json.decision}}\",\n  \"provisioning_action\": \"{{$json.provisioning_action}}\",\n  \"repair_required\": false,\n  \"audit_type\": \"synthetic_demo\"\n}"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "sync-issue-check",
+              "leftValue": "={{$json.simulate_sync_issue}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
       },
-      "id": "11111111-1111-4111-8111-111111111119",
+      "id": "11111111-1111-4111-8111-111111111127",
+      "name": "Sync Issue?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2840, 360]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"status\": \"operator_repair_queue\",\n  \"reason\": \"Provisioning sync issue detected\",\n  \"retry_allowed\": true,\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111128",
+      "name": "Operator Repair Queue",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [3100, 200]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"status\": \"retry_or_reconcile_ready\",\n  \"repair_action\": \"retry_provisioning_or_reconcile_state\",\n  \"repair_required\": true,\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111129",
+      "name": "Retry / Reconcile State",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [3360, 200]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"workflow_status\": \"completed\",\n  \"decision\": \"{{$json.decision}}\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"repair_required\": {{$json.repair_required || false}},\n  \"audit_type\": \"synthetic_demo\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111130",
       "name": "Completed Audit Record",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1800, 360]
+      "position": [3620, 360]
     }
   ],
   "connections": {
@@ -147,24 +341,72 @@
       "main": [[{ "node": "Application Intake Example", "type": "main", "index": 0 }]]
     },
     "Application Intake Example": {
-      "main": [[{ "node": "Normalize + Idempotency Key", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "Normalize Submission", "type": "main", "index": 0 }]]
     },
-    "Normalize + Idempotency Key": {
+    "Normalize Submission": {
       "main": [[{ "node": "Duplicate / Prior Status?", "type": "main", "index": 0 }]]
     },
     "Duplicate / Prior Status?": {
       "main": [
-        [{ "node": "Route To Review Queue", "type": "main", "index": 0 }],
-        [{ "node": "Decision Router", "type": "main", "index": 0 }]
+        [{ "node": "Update Review Context", "type": "main", "index": 0 }],
+        [{ "node": "Create Review Item", "type": "main", "index": 0 }]
       ]
     },
-    "Decision Router": {
-      "main": [[{ "node": "Provisioning Stub", "type": "main", "index": 0 }]]
+    "Create Review Item": {
+      "main": [[{ "node": "Human Decision Router", "type": "main", "index": 0 }]]
     },
-    "Provisioning Stub": {
-      "main": [[{ "node": "Notification Stub", "type": "main", "index": 0 }]]
+    "Update Review Context": {
+      "main": [[{ "node": "Human Decision Router", "type": "main", "index": 0 }]]
     },
-    "Notification Stub": {
+    "Human Decision Router": {
+      "main": [[{ "node": "Approve?", "type": "main", "index": 0 }]]
+    },
+    "Approve?": {
+      "main": [
+        [{ "node": "Update Operational Record", "type": "main", "index": 0 }],
+        [{ "node": "Reject?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Reject?": {
+      "main": [
+        [{ "node": "Record Rejection Outcome", "type": "main", "index": 0 }],
+        [{ "node": "Revoke?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Revoke?": {
+      "main": [
+        [{ "node": "Disable Access State", "type": "main", "index": 0 }],
+        [{ "node": "Repair Prior Decision State", "type": "main", "index": 0 }]
+      ]
+    },
+    "Repair Prior Decision State": {
+      "main": [[{ "node": "Update Operational Record", "type": "main", "index": 0 }]]
+    },
+    "Update Operational Record": {
+      "main": [[{ "node": "Access Provisioning Handoff", "type": "main", "index": 0 }]]
+    },
+    "Record Rejection Outcome": {
+      "main": [[{ "node": "Notification Handoff", "type": "main", "index": 0 }]]
+    },
+    "Disable Access State": {
+      "main": [[{ "node": "Notification Handoff", "type": "main", "index": 0 }]]
+    },
+    "Notification Handoff": {
+      "main": [[{ "node": "Completed Audit Record", "type": "main", "index": 0 }]]
+    },
+    "Access Provisioning Handoff": {
+      "main": [[{ "node": "Sync Issue?", "type": "main", "index": 0 }]]
+    },
+    "Sync Issue?": {
+      "main": [
+        [{ "node": "Operator Repair Queue", "type": "main", "index": 0 }],
+        [{ "node": "Completed Audit Record", "type": "main", "index": 0 }]
+      ]
+    },
+    "Operator Repair Queue": {
+      "main": [[{ "node": "Retry / Reconcile State", "type": "main", "index": 0 }]]
+    },
+    "Retry / Reconcile State": {
       "main": [[{ "node": "Completed Audit Record", "type": "main", "index": 0 }]]
     }
   },
@@ -176,5 +418,5 @@
   "tags": [],
   "triggerCount": 0,
   "updatedAt": "2026-06-20T00:00:00.000Z",
-  "versionId": "onboarding-demo"
+  "versionId": "member-onboarding-expanded-demo"
 }

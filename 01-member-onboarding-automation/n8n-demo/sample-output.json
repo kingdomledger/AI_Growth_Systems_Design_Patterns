@@ -1,19 +1,31 @@
 {
   "application_id": "application_001",
-  "status": "approved",
+  "workflow_status": "completed",
+  "decision": {
+    "status": "approved",
+    "admin_override_used": false
+  },
+  "operational_record": {
+    "review_item": "created",
+    "member_record": "updated",
+    "idempotency_key": "application_001:contact_ref_001"
+  },
   "provisioning": {
     "target": "member_portal",
     "action": "grant_access",
-    "stub_endpoint": "https://example.invalid/provisioning/grant",
+    "stub_endpoint": "https://example.invalid/provisioning/access-handoff",
     "result": "queued"
   },
   "notification": {
     "stub_endpoint": "https://example.invalid/notifications/member-status",
-    "result": "queued"
+    "result": "not_required_for_approval_path"
+  },
+  "repair": {
+    "sync_issue_detected": false,
+    "repair_required": false
   },
   "audit_record": {
-    "decision": "approve",
-    "reviewed_by": "operator_001",
-    "repair_required": false
+    "status": "completed",
+    "replay_ready": true
   }
 }
