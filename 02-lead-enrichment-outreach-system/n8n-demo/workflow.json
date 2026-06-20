@@ -112,42 +112,14 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict"
-          },
-          "conditions": [
-            {
-              "id": "contact-ref-check",
-              "leftValue": "={{$json.lead.contact_ref}}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty"
-              }
-            }
-          ],
-          "combinator": "and"
-        }
-      },
-      "id": "22222222-2222-4222-8222-222222222228",
-      "name": "Contact Record Present?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [1020, 500]
-    },
-    {
-      "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"needs_human_review\",\n  \"reason\": \"Missing contact reference or rerun required\",\n  \"rerun_allowed\": true,\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+        "jsonOutput": "={\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"lead\": {{$json.lead}},\n  \"dedupe_key\": \"{{$json.dedupe_key}}\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"enrichment\": {{$json.enrichment}},\n  \"ai_review\": {{$json.ai_review}},\n  \"review_status\": \"approved\",\n  \"review_loop\": {\n    \"status\": \"queued_for_edit_or_rerun\",\n    \"reason\": \"Reviewer requested edits before handoff\",\n    \"rerun_allowed\": true,\n    \"next_step\": \"draft_recommendation\"\n  }\n}"
       },
       "id": "22222222-2222-4222-8222-222222222229",
       "name": "Review / Rerun Queue",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1280, 720]
+      "position": [2060, 500]
     },
     {
       "parameters": {
@@ -158,7 +130,7 @@
       "name": "Enrichment Stage",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1280, 500]
+      "position": [1020, 500]
     },
     {
       "parameters": {
@@ -168,7 +140,7 @@
       "name": "AI Fit Analysis",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1540, 500]
+      "position": [1280, 500]
     },
     {
       "parameters": {
@@ -179,7 +151,7 @@
       "name": "Draft Recommendation",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1800, 500]
+      "position": [1540, 500]
     },
     {
       "parameters": {
@@ -204,10 +176,10 @@
         }
       },
       "id": "22222222-2222-4222-8222-222222222233",
-      "name": "Human Gate Approved?",
+      "name": "Human Review Decision",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [2060, 500]
+      "position": [1800, 500]
     },
     {
       "parameters": {
@@ -235,7 +207,7 @@
       "name": "Rejected?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [2320, 300]
+      "position": [2060, 300]
     },
     {
       "parameters": {
@@ -246,7 +218,7 @@
       "name": "Archive Rejected Lead",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [2580, 180]
+      "position": [2320, 180]
     },
     {
       "parameters": {
@@ -257,7 +229,7 @@
       "name": "Approved Snapshot",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [2320, 660]
+      "position": [2060, 660]
     },
     {
       "parameters": {
@@ -285,7 +257,7 @@
       "name": "Outbound Queue Stub",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [3100, 760],
+      "position": [2580, 760],
       "disabled": true
     },
     {
@@ -297,7 +269,7 @@
       "name": "Delivery Event Example",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [3360, 660]
+      "position": [2840, 660]
     },
     {
       "parameters": {
@@ -308,7 +280,7 @@
       "name": "Reply Event Example",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [3360, 860]
+      "position": [2840, 860]
     },
     {
       "parameters": {
@@ -360,13 +332,7 @@
     "Existing Lead?": {
       "main": [
         [{ "node": "Existing Record Review", "type": "main", "index": 0 }],
-        [{ "node": "Contact Record Present?", "type": "main", "index": 0 }]
-      ]
-    },
-    "Contact Record Present?": {
-      "main": [
-        [{ "node": "Enrichment Stage", "type": "main", "index": 0 }],
-        [{ "node": "Review / Rerun Queue", "type": "main", "index": 0 }]
+        [{ "node": "Enrichment Stage", "type": "main", "index": 0 }]
       ]
     },
     "Enrichment Stage": {
@@ -376,9 +342,9 @@
       "main": [[{ "node": "Draft Recommendation", "type": "main", "index": 0 }]]
     },
     "Draft Recommendation": {
-      "main": [[{ "node": "Human Gate Approved?", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "Human Review Decision", "type": "main", "index": 0 }]]
     },
-    "Human Gate Approved?": {
+    "Human Review Decision": {
       "main": [
         [{ "node": "Approved Snapshot", "type": "main", "index": 0 }],
         [{ "node": "Rejected?", "type": "main", "index": 0 }]
@@ -389,6 +355,9 @@
         [{ "node": "Archive Rejected Lead", "type": "main", "index": 0 }],
         [{ "node": "Review / Rerun Queue", "type": "main", "index": 0 }]
       ]
+    },
+    "Review / Rerun Queue": {
+      "main": [[{ "node": "Draft Recommendation", "type": "main", "index": 0 }]]
     },
     "Approved Snapshot": {
       "main": [[{ "node": "Cancel Before Handoff?", "type": "main", "index": 0 }]]

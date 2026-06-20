@@ -15,19 +15,17 @@ flowchart TD
   A[Lead intake cockpit] --> B[Normalize and dedupe]
   B --> C{Existing lead?}
   C -- Yes --> D[Existing record review]
-  C -- No --> E{Contact record present?}
-  E -- No --> F[Review or rerun queue]
-  E -- Yes --> G[Enrichment stage]
-  G --> H[AI fit analysis]
-  H --> I[Draft recommendation]
-  I --> J{Human gate approved?}
-  J -- No --> K{Rejected?}
-  K -- Yes --> L[Archive rejected lead]
-  K -- No --> F
-  J -- Yes --> M[Approved snapshot]
-  M --> N{Cancel before handoff?}
-  N -- Yes --> O[Cancellation record]
-  N -- No --> P[Outbound queue handoff]
+  C -- No --> E[Enrichment stage]
+  E --> F[AI fit analysis]
+  F --> G[Draft recommendation]
+  G --> H{Human review decision}
+  H -- Rejected --> I[Archive rejected lead]
+  H -- Needs edit or rerun --> J[Review or rerun queue]
+  J --> G
+  H -- Approved --> K[Approved snapshot]
+  K --> L{Cancel before handoff?}
+  L -- Yes --> M[Cancellation record]
+  L -- No --> P[Outbound queue handoff]
   P --> Q[Delivery event]
   P --> R[Reply event]
   Q --> S[Reporting sync]
@@ -63,8 +61,13 @@ lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confi
       "fit_tier": "high",
       "confidence": 0.86
     },
-    "human_gate": {
-      "status": "approved"
+    "human_review": {
+      "status": "approved",
+      "accepted_values": ["approved", "needs_edit", "rejected"]
+    },
+    "review_loop": {
+      "status": "not_required",
+      "rerun_allowed": true
     },
     "outbound_handoff": {
       "queued": true,
@@ -79,7 +82,7 @@ lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confi
 ## What To Notice
 
 - Approval creates a stable snapshot before outbound action.
-- AI analysis supports the review gate instead of replacing it.
+- AI analysis supports human review instead of replacing it.
 - Cancellation is modeled at handoff time, after review but before outbound action.
 - Rerun, reply, and reporting paths are modeled separately from enrichment.
 

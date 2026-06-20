@@ -17,9 +17,14 @@
     "confidence": 0.86,
     "reason_codes": ["ops_systems_signal", "public_content_match"]
   },
-  "human_gate": {
+  "human_review": {
     "status": "approved",
     "snapshot_status": "approved_snapshot"
+  },
+  "review_loop": {
+    "status": "not_required",
+    "rerun_allowed": true,
+    "edit_path": "review_queue_to_draft_recommendation"
   },
   "outbound_queue": {
     "stub_endpoint": "https://example.invalid/outbound/queue",
