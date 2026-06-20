@@ -24,12 +24,12 @@ The n8n demos are portfolio workflows built to show how I think about workflow a
 
 Each case study is README-first: the architecture diagram and compact example input/output are embedded directly in the folder README. The `n8n-demo/` subfolders are practical importable examples for the three workflow-orchestration case studies.
 
-## What This Shows
+## Working Patterns
 
-- I can turn messy operational processes into repeatable workflows.
-- I can design AI-assisted systems with human review instead of blind automation.
-- I can connect intake, enrichment, databases, review queues, outbound handoff, and reporting.
-- I think about operational reliability: reruns, cached failures, idempotent handoffs, cancellation, incident records, and sync repair.
+- Messy intake and review processes turned into repeatable workflows
+- AI-assisted analysis with human approval before downstream action
+- Handoffs across intake, enrichment, databases, review queues, outbound workflows, and reporting
+- Reliability patterns for reruns, cached failures, idempotent handoffs, cancellation, incident records, and sync repair
 
 ## Tools And Concepts Represented
 
