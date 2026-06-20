@@ -1,5 +1,6 @@
 {
   "name": "Lead Enrichment Outreach Demo",
+  "id": "lead-enrichment-outreach-demo",
   "active": false,
   "nodes": [
     {
@@ -8,28 +9,28 @@
       "name": "Manual Demo Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [0, 260]
+      "position": [0, 360]
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "{\n  \"batch_id\": \"lead_batch_001\",\n  \"lead\": {\n    \"source_ref\": \"public_directory\",\n    \"display_name\": \"Example Operator\",\n    \"profile_summary\": \"Runs a public newsletter about operations systems.\",\n    \"contact_ref\": \"contact_ref_001\"\n  },\n  \"review_status\": \"approved\",\n  \"rerun_requested\": false,\n  \"cancel_requested\": false\n}"
+        "jsonOutput": "{\n  \"batch_id\": \"lead_batch_001\",\n  \"lead\": {\n    \"source_ref\": \"public_directory\",\n    \"display_name\": \"Example Operator\",\n    \"profile_summary\": \"Runs a public newsletter about operations systems.\",\n    \"category_hint\": \"automation_operator\",\n    \"contact_ref\": \"contact_ref_001\"\n  },\n  \"existing_record\": false,\n  \"review_status\": \"approved\",\n  \"rerun_requested\": false,\n  \"cancel_requested\": false\n}"
       },
       "id": "22222222-2222-4222-8222-222222222222",
       "name": "Lead Intake Example",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [240, 260]
+      "position": [240, 360]
     },
     {
       "parameters": {
-        "jsCode": "return items.map(item => {\n  const lead = item.json.lead;\n  const sourceKey = `${lead.source_ref}:${lead.display_name}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');\n  return { json: { ...item.json, lead_id: 'lead_001', dedupe_key: sourceKey, normalized_at: new Date().toISOString() } };\n});"
+        "jsCode": "return items.map(item => {\n  const lead = item.json.lead || {};\n  const displayName = String(lead.display_name || '').trim();\n  const sourceRef = String(lead.source_ref || 'unknown_source').trim();\n  const dedupeKey = `${sourceRef}:${displayName}`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');\n  return {\n    json: {\n      ...item.json,\n      lead_id: 'lead_001',\n      lead: {\n        ...lead,\n        display_name: displayName,\n        contact_ref: lead.contact_ref || null\n      },\n      dedupe_key: dedupeKey,\n      idempotency_key: `lead_001:${dedupeKey}`,\n      normalized_at: new Date().toISOString()\n    }\n  };\n});"
       },
       "id": "22222222-2222-4222-8222-222222222223",
       "name": "Normalize + Dedupe Key",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 260]
+      "position": [500, 360]
     },
     {
       "parameters": {
@@ -57,39 +58,128 @@
       "name": "Cancel Requested?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [760, 260]
+      "position": [760, 360]
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"status\": \"cancelled_before_handoff\",\n  \"reason\": \"Operator cancellation requested\"\n}"
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"cancelled_before_handoff\",\n  \"reason\": \"Operator cancellation requested\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
       },
       "id": "22222222-2222-4222-8222-222222222225",
       "name": "Cancellation Record",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1020, 80]
+      "position": [1020, 120]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "existing-record-check",
+              "leftValue": "={{$json.existing_record}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "22222222-2222-4222-8222-222222222226",
+      "name": "Existing Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1020, 440]
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"dedupe_key\": \"{{$json.dedupe_key}}\",\n  \"lead\": {{$json.lead}},\n  \"enrichment\": {\n    \"public_signal\": \"operations systems content\",\n    \"contact_quality\": \"reviewable\",\n    \"source_count\": 2\n  },\n  \"review_status\": \"{{$json.review_status}}\",\n  \"rerun_requested\": {{$json.rerun_requested}}\n}"
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"existing_record_review\",\n  \"dedupe_key\": \"{{$json.dedupe_key}}\",\n  \"operator_action\": \"review_existing_record_before_rerun\"\n}"
       },
-      "id": "22222222-2222-4222-8222-222222222226",
-      "name": "Enrichment Stub",
+      "id": "22222222-2222-4222-8222-222222222227",
+      "name": "Existing Record Review",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1020, 360]
+      "position": [1280, 260]
     },
     {
       "parameters": {
-        "jsCode": "return items.map(item => {\n  const summary = item.json.lead.profile_summary || '';\n  const confidence = summary.length > 20 ? 0.82 : 0.45;\n  return {\n    json: {\n      ...item.json,\n      ai_review: {\n        fit_category: 'operations_leader',\n        confidence,\n        note: 'Example AI-analysis note.'\n      }\n    }\n  };\n});"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "contact-ref-check",
+              "leftValue": "={{$json.lead.contact_ref}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
       },
-      "id": "22222222-2222-4222-8222-222222222227",
-      "name": "AI Analysis Placeholder",
+      "id": "22222222-2222-4222-8222-222222222228",
+      "name": "Contact Ref Present?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1280, 580]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"needs_human_review\",\n  \"reason\": \"Missing contact reference or rerun required\",\n  \"rerun_allowed\": true,\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "22222222-2222-4222-8222-222222222229",
+      "name": "Review / Rerun Queue",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1540, 780]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"dedupe_key\": \"{{$json.dedupe_key}}\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"lead\": {{$json.lead}},\n  \"enrichment\": {\n    \"status\": \"complete\",\n    \"source_count\": 3,\n    \"public_signal\": \"workflow systems and operations content\",\n    \"contact_quality\": \"reviewable\",\n    \"notes\": [\"public profile reviewed\", \"category hint confirmed\"]\n  },\n  \"review_status\": \"{{$json.review_status}}\",\n  \"rerun_requested\": {{$json.rerun_requested}}\n}"
+      },
+      "id": "22222222-2222-4222-8222-222222222230",
+      "name": "Enrichment Stage",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1540, 580]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const summary = item.json.lead.profile_summary || '';\n  const sourceCount = item.json.enrichment.source_count || 0;\n  const confidence = summary.length > 20 && sourceCount >= 2 ? 0.86 : 0.52;\n  const fitTier = confidence >= 0.8 ? 'high' : 'review';\n  return {\n    json: {\n      ...item.json,\n      ai_review: {\n        fit_category: 'workflow_operator',\n        fit_tier: fitTier,\n        confidence,\n        reason_codes: ['ops_systems_signal', 'public_content_match'],\n        note: 'Example AI-analysis note for operator review.'\n      }\n    }\n  };\n});"
+      },
+      "id": "22222222-2222-4222-8222-222222222231",
+      "name": "AI Fit Analysis",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1280, 360]
+      "position": [1800, 580]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"lead\": {{$json.lead}},\n  \"dedupe_key\": \"{{$json.dedupe_key}}\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"enrichment\": {{$json.enrichment}},\n  \"ai_review\": {{$json.ai_review}},\n  \"draft_recommendation\": {\n    \"recommended_action\": \"approve_for_manual_outreach\",\n    \"message_angle\": \"reference public operations systems work\",\n    \"requires_operator_edit\": true\n  },\n  \"review_status\": \"{{$json.review_status}}\"\n}"
+      },
+      "id": "22222222-2222-4222-8222-222222222232",
+      "name": "Draft Recommendation",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2060, 580]
     },
     {
       "parameters": {
@@ -113,33 +203,61 @@
           "combinator": "and"
         }
       },
-      "id": "22222222-2222-4222-8222-222222222228",
+      "id": "22222222-2222-4222-8222-222222222233",
       "name": "Human Gate Approved?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [1540, 360]
+      "position": [2320, 580]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "reject-check",
+              "leftValue": "={{$json.review_status}}",
+              "rightValue": "rejected",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "22222222-2222-4222-8222-222222222234",
+      "name": "Rejected?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2580, 380]
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"status\": \"needs_human_review\",\n  \"ai_review\": {{$json.ai_review}},\n  \"rerun_allowed\": true\n}"
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"archived_rejected\",\n  \"reason\": \"Human reviewer rejected lead\",\n  \"ai_review\": {{$json.ai_review}}\n}"
       },
-      "id": "22222222-2222-4222-8222-222222222229",
-      "name": "Review / Rerun Queue",
+      "id": "22222222-2222-4222-8222-222222222235",
+      "name": "Archive Rejected Lead",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1800, 180]
+      "position": [2840, 260]
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"status\": \"approved_snapshot\",\n  \"idempotency_key\": \"{{$json.lead_id}}:approved\",\n  \"ai_review\": {{$json.ai_review}},\n  \"approved_at\": \"{{$now}}\"\n}"
+        "jsonOutput": "={\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"status\": \"approved_snapshot\",\n  \"idempotency_key\": \"{{$json.lead_id}}:approved\",\n  \"approved_at\": \"{{$now}}\",\n  \"lead\": {{$json.lead}},\n  \"enrichment\": {{$json.enrichment}},\n  \"ai_review\": {{$json.ai_review}},\n  \"draft_recommendation\": {{$json.draft_recommendation}}\n}"
       },
-      "id": "22222222-2222-4222-8222-222222222230",
+      "id": "22222222-2222-4222-8222-222222222236",
       "name": "Approved Snapshot",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1800, 500]
+      "position": [2580, 660]
     },
     {
       "parameters": {
@@ -154,28 +272,79 @@
             {
               "name": "idempotency_key",
               "value": "={{$json.idempotency_key}}"
+            },
+            {
+              "name": "recommended_action",
+              "value": "={{$json.draft_recommendation.recommended_action}}"
             }
           ]
         },
         "options": {}
       },
-      "id": "22222222-2222-4222-8222-222222222231",
+      "id": "22222222-2222-4222-8222-222222222237",
       "name": "Outbound Queue Stub",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2060, 500],
+      "position": [2840, 660],
       "disabled": true
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"handoff_status\": \"queued\",\n  \"event_reconciliation\": [\"queued\", \"delivered\", \"reply_or_no_reply\"],\n  \"cancel_allowed\": true\n}"
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"event_type\": \"outbound.delivered\",\n  \"event_status\": \"delivered\",\n  \"handoff_status\": \"queued\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
       },
-      "id": "22222222-2222-4222-8222-222222222232",
-      "name": "Event / Reply Reconciliation",
+      "id": "22222222-2222-4222-8222-222222222238",
+      "name": "Delivery Event Example",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [2320, 500]
+      "position": [3100, 560]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"event_type\": \"reply.review_required\",\n  \"reply_status\": \"operator_review\",\n  \"next_action\": \"review_reply_before_followup\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "22222222-2222-4222-8222-222222222239",
+      "name": "Reply Event Example",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [3100, 760]
+    },
+    {
+      "parameters": {
+        "url": "https://example.invalid/reporting/lead-lifecycle",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "lead_id",
+              "value": "={{$json.lead_id}}"
+            },
+            {
+              "name": "event_type",
+              "value": "={{$json.event_type}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "22222222-2222-4222-8222-222222222240",
+      "name": "Reporting Sync Stub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3360, 660],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"lifecycle_completed\",\n  \"events_recorded\": [\"approved\", \"queued\", \"delivered\", \"reply_review_required\"],\n  \"reporting_sync\": \"recorded\",\n  \"cancel_allowed\": true,\n  \"rerun_allowed\": true\n}"
+      },
+      "id": "22222222-2222-4222-8222-222222222241",
+      "name": "Lifecycle Completed",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [3620, 660]
     }
   ],
   "connections": {
@@ -191,18 +360,39 @@
     "Cancel Requested?": {
       "main": [
         [{ "node": "Cancellation Record", "type": "main", "index": 0 }],
-        [{ "node": "Enrichment Stub", "type": "main", "index": 0 }]
+        [{ "node": "Existing Lead?", "type": "main", "index": 0 }]
       ]
     },
-    "Enrichment Stub": {
-      "main": [[{ "node": "AI Analysis Placeholder", "type": "main", "index": 0 }]]
+    "Existing Lead?": {
+      "main": [
+        [{ "node": "Existing Record Review", "type": "main", "index": 0 }],
+        [{ "node": "Contact Ref Present?", "type": "main", "index": 0 }]
+      ]
     },
-    "AI Analysis Placeholder": {
+    "Contact Ref Present?": {
+      "main": [
+        [{ "node": "Enrichment Stage", "type": "main", "index": 0 }],
+        [{ "node": "Review / Rerun Queue", "type": "main", "index": 0 }]
+      ]
+    },
+    "Enrichment Stage": {
+      "main": [[{ "node": "AI Fit Analysis", "type": "main", "index": 0 }]]
+    },
+    "AI Fit Analysis": {
+      "main": [[{ "node": "Draft Recommendation", "type": "main", "index": 0 }]]
+    },
+    "Draft Recommendation": {
       "main": [[{ "node": "Human Gate Approved?", "type": "main", "index": 0 }]]
     },
     "Human Gate Approved?": {
       "main": [
         [{ "node": "Approved Snapshot", "type": "main", "index": 0 }],
+        [{ "node": "Rejected?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Rejected?": {
+      "main": [
+        [{ "node": "Archive Rejected Lead", "type": "main", "index": 0 }],
         [{ "node": "Review / Rerun Queue", "type": "main", "index": 0 }]
       ]
     },
@@ -210,7 +400,21 @@
       "main": [[{ "node": "Outbound Queue Stub", "type": "main", "index": 0 }]]
     },
     "Outbound Queue Stub": {
-      "main": [[{ "node": "Event / Reply Reconciliation", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          { "node": "Delivery Event Example", "type": "main", "index": 0 },
+          { "node": "Reply Event Example", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Delivery Event Example": {
+      "main": [[{ "node": "Reporting Sync Stub", "type": "main", "index": 0 }]]
+    },
+    "Reply Event Example": {
+      "main": [[{ "node": "Reporting Sync Stub", "type": "main", "index": 0 }]]
+    },
+    "Reporting Sync Stub": {
+      "main": [[{ "node": "Lifecycle Completed", "type": "main", "index": 0 }]]
     }
   },
   "pinData": {},
@@ -221,5 +425,5 @@
   "tags": [],
   "triggerCount": 0,
   "updatedAt": "2026-06-20T00:00:00.000Z",
-  "versionId": "lead-outreach-demo"
+  "versionId": "lead-enrichment-outreach-expanded-demo"
 }

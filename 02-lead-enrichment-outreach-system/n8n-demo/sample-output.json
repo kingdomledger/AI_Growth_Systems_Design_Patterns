@@ -1,19 +1,35 @@
 {
   "batch_id": "lead_batch_001",
   "lead_id": "lead_001",
-  "status": "approved_for_handoff",
-  "review_snapshot": {
-    "fit_category": "operations_leader",
-    "confidence": 0.82,
-    "human_gate": "approved"
+  "dedupe": {
+    "status": "new",
+    "dedupe_key": "public-directory-example-operator",
+    "existing_record": false
+  },
+  "enrichment": {
+    "status": "complete",
+    "source_count": 3,
+    "contact_quality": "reviewable"
+  },
+  "ai_review": {
+    "fit_category": "workflow_operator",
+    "fit_tier": "high",
+    "confidence": 0.86,
+    "reason_codes": ["ops_systems_signal", "public_content_match"]
+  },
+  "human_gate": {
+    "status": "approved",
+    "snapshot_status": "approved_snapshot"
   },
   "outbound_queue": {
     "stub_endpoint": "https://example.invalid/outbound/queue",
     "handoff_status": "queued",
     "idempotency_key": "lead_001:approved"
   },
-  "reconciliation": {
-    "events_expected": ["queued", "delivered", "reply_or_no_reply"],
+  "lifecycle": {
+    "delivery_event": "outbound.delivered",
+    "reply_event": "reply.review_required",
+    "reporting_sync": "recorded",
     "cancel_allowed": true,
     "rerun_allowed": true
   }

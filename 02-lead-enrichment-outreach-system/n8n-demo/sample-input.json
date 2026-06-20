@@ -1,11 +1,13 @@
 {
   "batch_id": "lead_batch_001",
   "lead": {
-    "source_ref": "public-directory-demo",
+    "source_ref": "public_directory",
     "display_name": "Example Operator",
     "profile_summary": "Runs a public newsletter about operations systems.",
+    "category_hint": "automation_operator",
     "contact_ref": "contact_ref_001"
   },
+  "existing_record": false,
   "review_status": "approved",
   "rerun_requested": false,
   "cancel_requested": false

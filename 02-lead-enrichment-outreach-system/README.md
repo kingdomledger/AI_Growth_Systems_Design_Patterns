@@ -13,21 +13,26 @@ A workflow for turning rough lead inputs into enriched, reviewed, handoff-ready 
 ```mermaid
 flowchart TD
   A[Lead intake cockpit] --> B[Normalize and dedupe]
-  B --> C[Contact validation]
-  C --> D[Public-source enrichment]
-  D --> E[AI-assisted analysis]
-  E --> F[Draft or recommendation generation]
-  F --> G{Human gate}
-  G -- Needs edit --> H[Operator edits or rerun]
-  G -- Reject --> I[Archive with reason]
-  G -- Approve --> J[Immutable approval snapshot]
-  H --> E
-  J --> K[Idempotent outbound handoff]
-  K --> L[Outbound queue]
-  L --> M[Manual or controlled sender]
-  M --> N[Delivery and reply events]
-  N --> O[Reporting sync]
-  L --> P[Cancellation control]
+  B --> C{Cancel requested?}
+  C -- Yes --> D[Cancellation record]
+  C -- No --> E{Existing lead?}
+  E -- Yes --> F[Existing record review]
+  E -- No --> G{Contact ref present?}
+  G -- No --> H[Review or rerun queue]
+  G -- Yes --> I[Enrichment stage]
+  I --> J[AI fit analysis]
+  J --> K[Draft recommendation]
+  K --> L{Human gate approved?}
+  L -- No --> M{Rejected?}
+  M -- Yes --> N[Archive rejected lead]
+  M -- No --> H
+  L -- Yes --> O[Approved snapshot]
+  O --> P[Outbound queue handoff]
+  P --> Q[Delivery event]
+  P --> R[Reply event]
+  Q --> S[Reporting sync]
+  R --> S
+  S --> T[Lifecycle completed]
 ```
 
 ## Example Input
@@ -45,10 +50,15 @@ lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confi
 ```json
 {
   "batch_id": "lead_batch_001",
+  "dedupe": {
+    "status": "new"
+  },
+  "enrichment": {
+    "status": "complete",
+    "source_count": 3
+  },
   "approved_snapshot": {
     "lead_id": "lead_001",
-    "dedupe_status": "new",
-    "enrichment_status": "complete",
     "ai_analysis": {
       "fit_tier": "high",
       "confidence": 0.86
@@ -58,7 +68,8 @@ lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confi
     },
     "outbound_handoff": {
       "queued": true,
-      "sender_mode": "manual_or_controlled"
+      "sender_mode": "manual_or_controlled",
+      "events_tracked": ["delivery", "reply", "reporting_sync"]
     }
   }
 }
