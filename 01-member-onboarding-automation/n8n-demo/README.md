@@ -4,7 +4,7 @@ Importable n8n workflow for the member onboarding case study.
 
 ## Preview
 
-Current canvas snapshot of the importable workflow.
+This screenshot needs refresh after the admin override / repair label update.
 
 ![n8n workflow snapshot](./n8n-workflow-snapshot.png)
 
