@@ -1,33 +1,30 @@
-# Make/n8n Concept Mapping
+# Concept Mapping
 
-This document maps private implementation details to public-safe workflow concepts.
+This document maps specific implementation patterns to public-safe workflow concepts.
 
 | Concept | Public-safe description |
 |---|---|
-| Form intake | A trigger that receives structured submissions from a public or internal form |
-| Workflow orchestrator | A system like n8n or Make that routes records between tools |
-| Spreadsheet/database cockpit | An operational place where teams review, correct, and approve records |
-| CRM upsert | Create or update a lifecycle record without duplicating contacts |
-| Enrichment | Add public context or derived fields to a raw lead or application |
+| Form intake | Trigger that receives structured applications, requests, or lead records |
+| Workflow orchestrator | System that routes records between tools and decision paths |
+| Operational cockpit | Spreadsheet or database where operators review, correct, and approve records |
+| CRM/lifecycle upsert | Create or update a downstream record without duplicating it |
+| Enrichment | Add public context or derived fields to a raw record |
 | AI scoring | Use an LLM or classifier to produce advisory fit, category, or quality signals |
-| Human review | A queue where operators approve, reject, edit, or request more research |
-| Webhook event | A machine-triggered event that starts or continues a workflow |
-| Retry queue | A controlled path for replaying failed operations |
-| Incident log | A structured record of what failed, why, and what action is needed |
-| Recovery path | A repeatable way to fix and rerun failed or stuck records |
+| Human gate | Operator approval point before outbound or irreversible action |
+| Outbound handoff | Queue approved records for notification, email, or lifecycle action |
+| Retry/rerun control | Controlled path for replaying failed or stale records |
+| Incident record | Structured record of what failed, why, and what action is needed |
+| Sync repair | Operator-safe way to reconcile mismatched workflow/database states |
 
 ## Example Public Flow
 
 ```text
-Form intake
-  -> workflow orchestrator
+Intake
   -> validation and dedupe
-  -> spreadsheet/database cockpit
-  -> human review
-  -> CRM/database upsert
-  -> notification or access provisioning
-  -> incident log and replay path
+  -> enrichment or classification
+  -> operational review queue
+  -> approval handoff
+  -> downstream sync or outbound queue
+  -> incident record and repair path
 ```
-
-This mapping avoids naming private source systems, real workspaces, exact schemas, or production endpoints.
 

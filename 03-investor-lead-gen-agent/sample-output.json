@@ -1,0 +1,23 @@
+{
+  "run_id": "investor_agent_demo_001",
+  "status": "review_export_ready",
+  "summary": {
+    "candidates_sourced": 24,
+    "deduped_candidates": 17,
+    "enriched_profiles": 11,
+    "ranked_for_review": 6
+  },
+  "top_review_record": {
+    "lead_ref": "investor_demo_001",
+    "score": 84,
+    "fit_tier": "high",
+    "evidence_count": 5,
+    "rationale": "Synthetic candidate matches market, stage, and thesis signals.",
+    "human_review_status": "pending"
+  },
+  "exports": {
+    "review_csv": "outputs/demo_investor_review.csv",
+    "audit_json": "outputs/demo_investor_review.json"
+  }
+}
+

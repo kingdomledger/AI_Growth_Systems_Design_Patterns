@@ -1,41 +1,36 @@
 # AI Growth & Workflow Systems Portfolio
 
-I build AI-assisted workflow systems that help startups turn messy growth and operations processes into repeatable execution.
+I build AI-assisted operational systems for onboarding, lead enrichment, research agents, outreach workflows, and reliability.
 
-This repo is a recruiter-friendly proof-of-work portfolio for onboarding automation, lead enrichment, AI agent outputs, human-in-the-loop review, CRM/lifecycle workflows, and reliability/error-handling patterns.
+This repo is a sanitized proof-of-work portfolio. The examples are based on real workflow-building experience, but every artifact uses synthetic data, generalized system names, mock inputs, and public-safe architecture.
 
 ## Start Here
 
-| System | What it demonstrates | Link |
+| System | What it proves | Link |
 |---|---|---|
-| Onboarding & Registration Automation | Intake, routing, dedupe, CRM/database sync, access provisioning, triggered notifications, recovery paths | [01-onboarding-registration-automation](./01-onboarding-registration-automation) |
-| Lead Enrichment & AI Review Queue | Public-source enrichment, AI-assisted scoring, deduplication, human review, outreach-ready records | [02-lead-enrichment-ai-review-queue](./02-lead-enrichment-ai-review-queue) |
-| AI Agent Structured Output Workflow | Research input, fact extraction, structured JSON, validation, human review, final output | [03-ai-agent-structured-output-workflow](./03-ai-agent-structured-output-workflow) |
-| Workflow Reliability & Error Handling | Webhook dedupe, idempotency, retries, API failure handling, alerting, incident logs, recovery paths | [04-workflow-reliability-error-handling](./04-workflow-reliability-error-handling) |
+| Member Onboarding Automation | Intake, review decisions, access provisioning, override/repair paths | [01-member-onboarding-automation](./01-member-onboarding-automation) |
+| Lead Enrichment & Outreach System | Enrichment, AI analysis, human review, outbound handoff | [02-lead-enrichment-outreach-system](./02-lead-enrichment-outreach-system) |
+| Investor Lead Gen Agent | Python CLI agent for sourcing, scoring, and review exports | [03-investor-lead-gen-agent](./03-investor-lead-gen-agent) |
+| Profile Research Agent | Structured AI extraction from public profile/research inputs | [04-profile-research-agent](./04-profile-research-agent) |
+| Reliability & Error Handling | Dedupe, idempotency, retries, incident logs, replay | [05-workflow-reliability-error-handling](./05-workflow-reliability-error-handling) |
 
-## What This Proves
+## What This Shows
 
-- I can turn messy startup operations into repeatable workflows.
-- I can design AI-assisted review systems without removing human accountability.
-- I understand APIs, webhooks, CRM/database handoffs, and workflow orchestration.
-- I think about reliability: dedupe, idempotency, retries, alerts, incident logs, and recovery.
-
-## Flagship Systems
-
-- **Onboarding automation:** intake, review decisions, provisioning, notifications, and recovery paths.
-- **Lead enrichment review queue:** public-source leads, AI-assisted scoring, dedupe, and human approval.
-- **AI agent structured output:** research input, fact extraction, JSON validation, and reviewer handoff.
-- **Workflow reliability:** importable synthetic n8n demo with validation, duplicate handling, and failure branches.
+- I can turn messy operational processes into repeatable workflows.
+- I can design AI-assisted systems with human review instead of blind automation.
+- I can connect intake, enrichment, databases, review queues, outbound handoff, and reporting.
+- I think about operational reliability: reruns, cached failures, idempotent handoffs, cancellation, incident records, and sync repair.
 
 ## What Is Sanitized
 
-All examples are sanitized and synthetic. They are based on real workflow-building experience, but they are not employer workflow exports, private screenshots, customer data, credentials, proprietary prompts, internal dashboards, or production implementation files.
+The repo does not include raw workflow exports, real company names, real users, real leads, real investors, private prompts, credentials, internal dashboards, production screenshots, or exact database schemas.
+
+The examples are intentionally generalized one level up so they are safe to share and easy to understand.
 
 ## Tools And Concepts Represented
 
 - n8n-style and Make-style workflow orchestration
-- Webhooks, APIs, operational spreadsheets, databases, and CRM sync
-- LLM structured output, confidence flags, and human review
-- Dedupe, idempotency, retries, incident logs, and replay paths
+- Webhooks, APIs, operational spreadsheets, databases, and CRM/lifecycle handoffs
+- LLM extraction, scoring, confidence flags, validation, and human review
+- Dedupe, retryability, idempotency, incident logs, cancellation controls, and replay paths
 
-Recommended first click: [Workflow Reliability & Error Handling](./04-workflow-reliability-error-handling), then [Lead Enrichment & AI Review Queue](./02-lead-enrichment-ai-review-queue).

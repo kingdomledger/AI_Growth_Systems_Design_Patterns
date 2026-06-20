@@ -5,7 +5,7 @@
   "source": "synthetic_demo",
   "payload": {
     "record_id": "rec_demo_001",
-    "operation": "sync_to_system",
+    "operation": "sync_to_downstream_system",
     "simulate_failure": false
   }
 }

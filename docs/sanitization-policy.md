@@ -1,12 +1,12 @@
 # Sanitization Policy
 
-This portfolio uses synthetic examples and generalized architecture. It is designed to show workflow thinking without exposing private implementation details.
+This portfolio shows public-safe versions of real workflow patterns. It is designed to prove systems thinking without exposing private implementation details.
 
 ## Never Include
 
 - Employer, client, or current company names
-- Real users, creators, investors, customers, leads, or target lists
-- Real emails, wallet addresses, private profile URLs, or internal identifiers
+- Real users, leads, investors, applicants, customers, or target lists
+- Real emails, private profile URLs, wallet addresses, or internal identifiers
 - API keys, access tokens, credentials, bearer strings, cookies, or sessions
 - `.env` files, browser state, dashboards, private endpoints, or webhook URLs
 - Raw workflow exports from real workspaces
@@ -17,21 +17,20 @@ This portfolio uses synthetic examples and generalized architecture. It is desig
 
 Convert specifics one level up.
 
-Specific implementation details become public-safe architecture labels:
-
 | Specific | Public-safe abstraction |
 |---|---|
 | Named form provider | Form intake |
 | Named workflow workspace | Workflow orchestrator |
-| Exact sheet/table ID | Operational spreadsheet or database |
-| Exact CRM/list ID | CRM upsert |
+| Exact spreadsheet or table ID | Operational spreadsheet or database |
+| Exact CRM/list ID | CRM or lifecycle upsert |
 | Production webhook path | Webhook event |
-| Exact scoring prompt | AI-assisted classification layer |
+| Exact scoring prompt | AI-assisted classification or scoring layer |
 | Real target list | Synthetic public-source input |
+| Real outreach campaign | General outbound handoff |
 
-## Public Claim Standard
+## Claim Standard
 
-Use wording like: "sanitized and synthetic example based on workflow-building experience."
+Use: "sanitized case study based on real workflow-building experience."
 
-Avoid wording like: "production export," "live workflow," "client system," or "real campaign data."
+Avoid: "production export," "client system," "live workflow," or "real campaign data."
 

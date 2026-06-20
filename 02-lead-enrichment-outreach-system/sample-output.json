@@ -1,0 +1,24 @@
+{
+  "batch_id": "lead_ops_demo_2026_06_20",
+  "approved_snapshot": {
+    "lead_id": "lead_demo_001",
+    "dedupe_status": "new",
+    "enrichment_status": "complete",
+    "ai_analysis": {
+      "fit_tier": "high",
+      "confidence": 0.86,
+      "signals": ["workflow systems", "operations audience", "recent public activity"]
+    },
+    "human_gate": {
+      "status": "approved",
+      "approved_by": "operator_demo",
+      "approval_notes": "Synthetic approval for public portfolio example."
+    },
+    "outbound_handoff": {
+      "queued": true,
+      "idempotency_key": "lead_demo_001:campaign_demo_001",
+      "sender_mode": "manual_or_controlled"
+    }
+  }
+}
+

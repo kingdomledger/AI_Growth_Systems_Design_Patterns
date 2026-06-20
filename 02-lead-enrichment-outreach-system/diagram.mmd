@@ -1,0 +1,18 @@
+flowchart TD
+  A[Lead intake cockpit] --> B[Normalize and dedupe]
+  B --> C[Contact validation]
+  C --> D[Public-source enrichment]
+  D --> E[AI-assisted analysis]
+  E --> F[Draft or recommendation generation]
+  F --> G{Human gate}
+  G -- Needs edit --> H[Operator edits or rerun]
+  G -- Reject --> I[Archive with reason]
+  G -- Approve --> J[Immutable approval snapshot]
+  H --> E
+  J --> K[Idempotent outbound handoff]
+  K --> L[Outbound queue]
+  L --> M[Manual or controlled sender]
+  M --> N[Delivery and reply events]
+  N --> O[Reporting sync]
+  L --> P[Cancellation control]
+

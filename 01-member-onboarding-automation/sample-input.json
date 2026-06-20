@@ -1,0 +1,16 @@
+{
+  "event_id": "evt_member_onboarding_001",
+  "submitted_at": "2026-06-20T09:15:00Z",
+  "application": {
+    "application_id": "app_demo_1042",
+    "member_ref": "member_demo_1042",
+    "program": "access_program_demo",
+    "requested_access": ["workspace", "resource_library"]
+  },
+  "review_context": {
+    "source": "form_intake",
+    "prior_status": null,
+    "duplicate_key": "member_demo_1042|access_program_demo"
+  }
+}
+

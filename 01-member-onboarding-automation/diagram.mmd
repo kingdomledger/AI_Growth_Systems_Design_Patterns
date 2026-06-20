@@ -1,0 +1,21 @@
+flowchart TD
+  A[Application intake] --> B[Normalize submission]
+  B --> C{Duplicate or prior status?}
+  C -- New application --> D[Create review item]
+  C -- Existing record --> E[Update review context]
+  D --> F{Human decision}
+  E --> F
+  F -- Approve --> G[Update operational record]
+  F -- Reject --> H[Record rejection outcome]
+  F -- Revoke --> I[Disable access state]
+  F -- Admin override --> J[Repair prior decision state]
+  G --> K[Access provisioning handoff]
+  H --> L[Notification handoff]
+  I --> L
+  J --> G
+  K --> M{Sync issue?}
+  M -- Yes --> N[Operator repair queue]
+  M -- No --> O[Completed audit record]
+  N --> P[Retry or reconcile state]
+  P --> O
+

@@ -4,13 +4,13 @@
   "idempotency_key": "record.approved:rec_demo_002",
   "created_at": "2026-06-20T10:42:00Z",
   "severity": "warning",
-  "category": "retryable_downstream_failure",
-  "summary": "Synthetic downstream operation failed during demo processing.",
+  "category": "retryable_sync_failure",
+  "summary": "Synthetic downstream sync failed during demo processing.",
   "retry": {
     "attempt": 1,
     "max_attempts": 3,
-    "next_retry_at": "2026-06-20T10:47:00Z"
+    "replay_ready": true
   },
-  "operator_action": "Review incident, confirm downstream availability, replay event."
+  "operator_action": "Review incident, confirm downstream availability, replay or repair state."
 }
 

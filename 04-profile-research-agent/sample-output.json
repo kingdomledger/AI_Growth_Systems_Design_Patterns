@@ -1,0 +1,18 @@
+{
+  "request_id": "profile_research_demo_001",
+  "validation_status": "valid",
+  "structured_record": {
+    "summary": "Synthetic profile shows repeated signals around operations, workflow automation, and AI-assisted execution.",
+    "category": "workflow_systems",
+    "fit_tier": "high",
+    "confidence": 0.82,
+    "signals": [
+      "startup operations",
+      "workflow automation",
+      "human review queues",
+      "structured handoff"
+    ],
+    "needs_human_recheck": true
+  }
+}
+

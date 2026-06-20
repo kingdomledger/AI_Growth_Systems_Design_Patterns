@@ -1,0 +1,13 @@
+flowchart TD
+  A[Profile research input] --> B[Collect public source snippets]
+  B --> C[AI extraction layer]
+  C --> D[Structured record draft]
+  D --> E{Schema and field validation}
+  E -- Invalid --> F[Repair or reviewer correction]
+  F --> D
+  E -- Valid --> G{Confidence sufficient?}
+  G -- Yes --> H[Review-ready record]
+  G -- No --> I[Human recheck queue]
+  I --> H
+  H --> J[Approved structured output]
+
