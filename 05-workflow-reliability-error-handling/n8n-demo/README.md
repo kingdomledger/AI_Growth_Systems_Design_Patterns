@@ -2,6 +2,12 @@
 
 Importable n8n workflow for the reliability and error-handling case study.
 
+## Preview
+
+This canvas is a simplified portfolio version of the workflow pattern.
+
+![n8n workflow snapshot](../assets/n8n-workflow-snapshot.png)
+
 ## Files
 
 - `workflow.json`: workflow canvas
@@ -13,4 +19,4 @@ Importable n8n workflow for the reliability and error-handling case study.
 1. Import `workflow.json` into a clean n8n workspace.
 2. Run from the manual trigger.
 3. Use `sample-payload.json` as the reference event.
-4. Capture a canvas-only screenshot later if needed.
+4. Use the canvas snapshot as the public visual reference.
