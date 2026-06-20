@@ -75,4 +75,3 @@ lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confi
 - [n8n-demo/workflow.json](./n8n-demo/workflow.json): importable workflow
 - [n8n-demo/sample-input.json](./n8n-demo/sample-input.json): mock lead intake payload
 - [n8n-demo/sample-output.json](./n8n-demo/sample-output.json): mock approved handoff result
-- Future screenshot path: `assets/n8n-workflow-snapshot.png`

@@ -75,4 +75,3 @@ IDs are public example keys. They represent stable workflow references such as c
 - [n8n-demo/workflow.json](./n8n-demo/workflow.json): importable workflow
 - [n8n-demo/sample-payload.json](./n8n-demo/sample-payload.json): mock event payload
 - [n8n-demo/sample-output.json](./n8n-demo/sample-output.json): mock incident/replay result
-- Future screenshot path: `assets/n8n-workflow-snapshot.png`

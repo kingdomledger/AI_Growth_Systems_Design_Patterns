@@ -6,7 +6,7 @@ Importable n8n workflow for the reliability and error-handling case study.
 
 This canvas is a simplified portfolio version of the workflow pattern.
 
-![n8n workflow snapshot](../assets/n8n-workflow-snapshot.png)
+![n8n workflow snapshot](./n8n-workflow-snapshot.png)
 
 ## Files
 

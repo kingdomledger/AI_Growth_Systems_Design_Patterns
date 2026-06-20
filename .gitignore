@@ -22,9 +22,9 @@ __pycache__/
 *.gif
 *.mp4
 *.mov
-!01-member-onboarding-automation/assets/n8n-workflow-snapshot.png
-!02-lead-enrichment-outreach-system/assets/n8n-workflow-snapshot.png
-!05-workflow-reliability-error-handling/assets/n8n-workflow-snapshot.png
+!01-member-onboarding-automation/n8n-demo/n8n-workflow-snapshot.png
+!02-lead-enrichment-outreach-system/n8n-demo/n8n-workflow-snapshot.png
+!05-workflow-reliability-error-handling/n8n-demo/n8n-workflow-snapshot.png
 
 output/
 outputs/
