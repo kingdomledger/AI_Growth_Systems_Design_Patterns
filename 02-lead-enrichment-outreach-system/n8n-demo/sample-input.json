@@ -10,5 +10,5 @@
   "existing_record": false,
   "review_status": "approved",
   "rerun_requested": false,
-  "cancel_requested": false
+  "cancel_before_handoff": false
 }

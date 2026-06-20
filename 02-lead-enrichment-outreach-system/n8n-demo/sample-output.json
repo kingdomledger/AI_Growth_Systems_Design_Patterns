@@ -24,6 +24,7 @@
   "outbound_queue": {
     "stub_endpoint": "https://example.invalid/outbound/queue",
     "handoff_status": "queued",
+    "cancel_before_handoff": false,
     "idempotency_key": "lead_001:approved"
   },
   "lifecycle": {

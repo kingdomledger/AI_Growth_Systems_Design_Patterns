@@ -13,21 +13,21 @@ A workflow for turning rough lead inputs into enriched, reviewed, handoff-ready 
 ```mermaid
 flowchart TD
   A[Lead intake cockpit] --> B[Normalize and dedupe]
-  B --> C{Cancel requested?}
-  C -- Yes --> D[Cancellation record]
-  C -- No --> E{Existing lead?}
-  E -- Yes --> F[Existing record review]
-  E -- No --> G{Contact ref present?}
-  G -- No --> H[Review or rerun queue]
-  G -- Yes --> I[Enrichment stage]
-  I --> J[AI fit analysis]
-  J --> K[Draft recommendation]
-  K --> L{Human gate approved?}
-  L -- No --> M{Rejected?}
-  M -- Yes --> N[Archive rejected lead]
-  M -- No --> H
-  L -- Yes --> O[Approved snapshot]
-  O --> P[Outbound queue handoff]
+  B --> C{Existing lead?}
+  C -- Yes --> D[Existing record review]
+  C -- No --> E{Contact record present?}
+  E -- No --> F[Review or rerun queue]
+  E -- Yes --> G[Enrichment stage]
+  G --> H[AI fit analysis]
+  H --> I[Draft recommendation]
+  I --> J{Human gate approved?}
+  J -- No --> K{Rejected?}
+  K -- Yes --> L[Archive rejected lead]
+  K -- No --> F
+  J -- Yes --> M[Approved snapshot]
+  M --> N{Cancel before handoff?}
+  N -- Yes --> O[Cancellation record]
+  N -- No --> P[Outbound queue handoff]
   P --> Q[Delivery event]
   P --> R[Reply event]
   Q --> S[Reporting sync]
@@ -69,6 +69,7 @@ lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confi
     "outbound_handoff": {
       "queued": true,
       "sender_mode": "manual_or_controlled",
+      "cancel_before_handoff": false,
       "events_tracked": ["delivery", "reply", "reporting_sync"]
     }
   }
@@ -79,7 +80,8 @@ lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confi
 
 - Approval creates a stable snapshot before outbound action.
 - AI analysis supports the review gate instead of replacing it.
-- Cancellation, rerun, reply, and reporting paths are modeled separately from enrichment.
+- Cancellation is modeled at handoff time, after review but before outbound action.
+- Rerun, reply, and reporting paths are modeled separately from enrichment.
 
 ## Synthetic n8n Demo
 
