@@ -27,9 +27,7 @@ flowchart TD
   L -- Yes --> M[Cancellation record]
   L -- No --> P[Outbound queue handoff]
   P --> Q[Delivery event]
-  P --> R[Reply event]
   Q --> S[Reporting sync]
-  R --> S
   S --> T[Lifecycle completed]
 ```
 
@@ -73,7 +71,7 @@ lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confi
       "queued": true,
       "sender_mode": "manual_or_controlled",
       "cancel_before_handoff": false,
-      "events_tracked": ["delivery", "reply", "reporting_sync"]
+      "events_tracked": ["delivery", "reporting_sync"]
     }
   }
 }
@@ -84,7 +82,7 @@ lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confi
 - Approval creates a stable snapshot before outbound action.
 - AI analysis supports human review instead of replacing it.
 - Cancellation is modeled at handoff time, after review but before outbound action.
-- Rerun, reply, and reporting paths are modeled separately from enrichment.
+- Rerun and reporting paths are modeled separately from enrichment.
 
 ## Synthetic n8n Demo
 

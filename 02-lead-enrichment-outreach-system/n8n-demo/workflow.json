@@ -273,17 +273,6 @@
     },
     {
       "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"event_type\": \"reply.review_required\",\n  \"reply_status\": \"operator_review\",\n  \"next_action\": \"review_reply_before_followup\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
-      },
-      "id": "22222222-2222-4222-8222-222222222239",
-      "name": "Reply Event Example",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [2840, 860]
-    },
-    {
-      "parameters": {
         "url": "https://example.invalid/reporting/lead-lifecycle",
         "sendBody": true,
         "bodyParameters": {
@@ -304,19 +293,19 @@
       "name": "Reporting Sync Stub",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [3620, 760],
+      "position": [3100, 760],
       "disabled": true
     },
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"lifecycle_completed\",\n  \"events_recorded\": [\"approved\", \"queued\", \"delivered\", \"reply_review_required\"],\n  \"reporting_sync\": \"recorded\",\n  \"cancel_allowed\": true,\n  \"rerun_allowed\": true\n}"
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"lifecycle_completed\",\n  \"events_recorded\": [\"approved\", \"queued\", \"delivered\"],\n  \"reporting_sync\": \"recorded\",\n  \"cancel_allowed\": true,\n  \"rerun_allowed\": true\n}"
       },
       "id": "22222222-2222-4222-8222-222222222241",
       "name": "Lifecycle Completed",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [3880, 760]
+      "position": [3360, 760]
     }
   ],
   "connections": {
@@ -371,15 +360,11 @@
     "Outbound Queue Stub": {
       "main": [
         [
-          { "node": "Delivery Event Example", "type": "main", "index": 0 },
-          { "node": "Reply Event Example", "type": "main", "index": 0 }
+          { "node": "Delivery Event Example", "type": "main", "index": 0 }
         ]
       ]
     },
     "Delivery Event Example": {
-      "main": [[{ "node": "Reporting Sync Stub", "type": "main", "index": 0 }]]
-    },
-    "Reply Event Example": {
       "main": [[{ "node": "Reporting Sync Stub", "type": "main", "index": 0 }]]
     },
     "Reporting Sync Stub": {

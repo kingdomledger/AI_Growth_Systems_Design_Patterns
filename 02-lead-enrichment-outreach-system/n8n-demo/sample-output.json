@@ -34,7 +34,6 @@
   },
   "lifecycle": {
     "delivery_event": "outbound.delivered",
-    "reply_event": "reply.review_required",
     "reporting_sync": "recorded",
     "cancel_allowed": true,
     "rerun_allowed": true
