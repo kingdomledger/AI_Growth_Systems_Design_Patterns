@@ -1,0 +1,13 @@
+{
+  "application_id": "app_demo_001",
+  "submitted_at": "2026-06-20T09:00:00Z",
+  "applicant": {
+    "name": "Demo Applicant",
+    "contact_ref": "demo-applicant-at-example-invalid",
+    "region": "APAC"
+  },
+  "requested_access": "member_portal",
+  "review_decision": "approve",
+  "admin_override": false,
+  "prior_status": "new"
+}

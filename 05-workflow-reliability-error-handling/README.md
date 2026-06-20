@@ -22,6 +22,14 @@ Sanitized cross-system case study based on retry paths, rerun controls, cached f
 - Operator review and replay
 - Cancellation and reconciliation controls
 
+## Operational Complexity
+
+- Validation before side effects so bad payloads do not mutate downstream state
+- Idempotency key and duplicate branch to prevent repeated handoffs
+- Retryable vs permanent failure classification
+- Incident record and alert stub for operator visibility
+- Replay/recovery path after the root cause is fixed
+
 ## How It Works
 
 1. A synthetic event enters the workflow.
@@ -40,10 +48,16 @@ This example removes exact internal workflow names, live endpoints, provider nam
 
 Reliability is treated as part of the workflow design, not as an afterthought. The system makes failure states visible and recoverable.
 
+## Synthetic n8n Demo
+
+- [n8n-demo/workflow.json](./n8n-demo/workflow.json): importable synthetic workflow
+- [n8n-demo/sample-payload.json](./n8n-demo/sample-payload.json): mock event payload
+- [n8n-demo/sample-output.json](./n8n-demo/sample-output.json): mock incident/replay result
+- `assets/n8n-workflow-snapshot.png`: add after importing the synthetic workflow and capturing a safe canvas-only screenshot
+
 ## Files
 
 - [diagram.mmd](./diagram.mmd): workflow map
 - [sample-payload.json](./sample-payload.json): synthetic incoming event
 - [incident-log-example.json](./incident-log-example.json): synthetic incident record
 - [n8n-demo](./n8n-demo): optional synthetic demo workflow for later import/screenshot
-

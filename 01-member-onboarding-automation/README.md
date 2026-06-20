@@ -20,6 +20,14 @@ Sanitized case study based on onboarding and registration workflows with review 
 - Admin override for reversible decisions
 - Sync repair and audit records
 
+## Operational Complexity
+
+- Branching review states for approve, reject, revoke, and admin override
+- Duplicate/prior-state handling before downstream access changes
+- Provisioning and notification handoffs separated from the review decision
+- Repair queue when sync or access state needs operator attention
+- Completed audit record for final state and replay context
+
 ## How It Works
 
 1. A synthetic application enters through form intake.
@@ -38,9 +46,15 @@ This example removes vertical-specific labels, real applicants, private access r
 
 The important pattern is not just intake automation. It is controlled state management: review decisions, reversible overrides, access sync, and repair paths when the automation and operational record drift.
 
+## Synthetic n8n Demo
+
+- [n8n-demo/workflow.json](./n8n-demo/workflow.json): importable synthetic workflow
+- [n8n-demo/sample-input.json](./n8n-demo/sample-input.json): mock application payload
+- [n8n-demo/sample-output.json](./n8n-demo/sample-output.json): mock audit/provisioning result
+- `assets/n8n-workflow-snapshot.png`: add after importing the synthetic workflow and capturing a safe canvas-only screenshot
+
 ## Files
 
 - [diagram.mmd](./diagram.mmd): workflow map
 - [sample-input.json](./sample-input.json): synthetic application event
 - [sample-output.json](./sample-output.json): synthetic final decision/audit record
-

@@ -1,0 +1,11 @@
+{
+  "event_id": "evt_demo_001",
+  "event_type": "record.approved",
+  "occurred_at": "2026-06-20T09:10:00Z",
+  "source_system": "demo_intake",
+  "record_id": "record_demo_001",
+  "operation": "approval_handoff",
+  "simulate_duplicate": false,
+  "simulate_retryable_failure": true,
+  "simulate_permanent_failure": false
+}

@@ -1,0 +1,19 @@
+{
+  "application_id": "app_demo_001",
+  "status": "approved",
+  "provisioning": {
+    "target": "member_portal",
+    "action": "grant_access",
+    "stub_endpoint": "https://example.invalid/provisioning/grant",
+    "result": "queued"
+  },
+  "notification": {
+    "stub_endpoint": "https://example.invalid/notifications/member-status",
+    "result": "queued"
+  },
+  "audit_record": {
+    "decision": "approve",
+    "reviewed_by": "demo_operator",
+    "repair_required": false
+  }
+}

@@ -22,6 +22,14 @@ Sanitized case study based on a two-part lead operations system: enrichment and 
 - Outbound queue, event tracking, reply capture, reporting sync
 - Cancellation and rerun control when a record should not continue
 
+## Operational Complexity
+
+- Enrichment/review system separated from outbound execution
+- Deduplication before enrichment and before handoff
+- AI-assisted analysis treated as a review input, not an automatic decision
+- Approved snapshot creates a stable handoff contract
+- Cancellation, rerun, event tracking, reply capture, and reconciliation paths
+
 ## How It Works
 
 1. New leads enter an intake cockpit.
@@ -40,9 +48,15 @@ This example removes vertical-specific labels, real leads, real sources, exact p
 
 The strongest part of this system is the boundary between enrichment/review and outbound execution. Approval creates a stable snapshot, and the outbound side is separated so sending, events, replies, and reporting can be controlled independently.
 
+## Synthetic n8n Demo
+
+- [n8n-demo/workflow.json](./n8n-demo/workflow.json): importable synthetic workflow
+- [n8n-demo/sample-input.json](./n8n-demo/sample-input.json): mock lead intake payload
+- [n8n-demo/sample-output.json](./n8n-demo/sample-output.json): mock approved handoff result
+- `assets/n8n-workflow-snapshot.png`: add after importing the synthetic workflow and capturing a safe canvas-only screenshot
+
 ## Files
 
 - [diagram.mmd](./diagram.mmd): workflow map
 - [sample-input.csv](./sample-input.csv): synthetic intake records
 - [sample-output.json](./sample-output.json): synthetic approved/review queue output
-

@@ -1,0 +1,16 @@
+{
+  "event_id": "evt_demo_001",
+  "record_id": "record_demo_001",
+  "status": "incident_recorded",
+  "idempotency_key": "record_demo_001:approval_handoff",
+  "failure_class": "retryable",
+  "incident": {
+    "severity": "medium",
+    "operator_action": "review_then_replay",
+    "replay_allowed": true
+  },
+  "alert": {
+    "stub_endpoint": "https://example.invalid/alerts/workflow-incident",
+    "result": "queued"
+  }
+}

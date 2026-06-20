@@ -1,8 +1,23 @@
-# Optional n8n Demo
+# Synthetic n8n Demo: Workflow Reliability & Error Handling
 
-This folder is reserved for a synthetic n8n demo workflow and screenshot.
+This is a synthetic n8n workflow built for the public portfolio. It demonstrates workflow reliability patterns without copying private exports, endpoints, schemas, provider names, payloads, execution logs, or production infrastructure.
 
-Local n8n setup was paused because the machine had limited disk space and the install path was slow. The repo does not depend on this screenshot.
+## What It Shows
 
-When using n8n later, import only a synthetic demo workflow and screenshot only the canvas. Do not import raw private workflows or show credentials, workspace names, production URLs, or execution payloads.
+- Manual/webhook-style event intake
+- Payload validation before side effects
+- Idempotency key construction
+- Duplicate detection branch
+- Retryable vs permanent failure routing
+- Incident record and alert stubs
+- Replay/recovery path after operator review
 
+## How To Use
+
+1. Import `workflow.json` into a clean n8n workspace.
+2. Do not add credentials.
+3. Use `sample-payload.json` as the mock event reference.
+4. Run from the manual trigger or inspect the canvas.
+5. Screenshot only the workflow canvas if creating a public image.
+
+All endpoints use `https://example.invalid/...` and are disabled stubs.

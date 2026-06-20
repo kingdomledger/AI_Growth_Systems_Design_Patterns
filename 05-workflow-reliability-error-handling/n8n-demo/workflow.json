@@ -1,0 +1,284 @@
+{
+  "name": "Synthetic Workflow Reliability Error Handling",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "55555555-5555-4555-8555-555555555551",
+      "name": "Manual Demo Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 300]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"event_id\": \"evt_demo_001\",\n  \"event_type\": \"record.approved\",\n  \"occurred_at\": \"2026-06-20T09:10:00Z\",\n  \"source_system\": \"demo_intake\",\n  \"record_id\": \"record_demo_001\",\n  \"operation\": \"approval_handoff\",\n  \"simulate_duplicate\": false,\n  \"simulate_retryable_failure\": true,\n  \"simulate_permanent_failure\": false\n}"
+      },
+      "id": "55555555-5555-4555-8555-555555555552",
+      "name": "Mock Incoming Event",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const required = ['event_id', 'record_id', 'operation'];\n  const missing = required.filter(key => !item.json[key]);\n  return {\n    json: {\n      ...item.json,\n      valid_payload: missing.length === 0,\n      missing_fields: missing,\n      idempotency_key: `${item.json.record_id || 'missing'}:${item.json.operation || 'missing'}`\n    }\n  };\n});"
+      },
+      "id": "55555555-5555-4555-8555-555555555553",
+      "name": "Validate + Idempotency Key",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "valid-check",
+              "leftValue": "={{$json.valid_payload}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "55555555-5555-4555-8555-555555555554",
+      "name": "Payload Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [760, 300]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"event_id\": \"{{$json.event_id}}\",\n  \"status\": \"rejected_before_side_effects\",\n  \"missing_fields\": {{$json.missing_fields}},\n  \"operator_action\": \"fix_payload_then_replay\"\n}"
+      },
+      "id": "55555555-5555-4555-8555-555555555555",
+      "name": "Invalid Payload Incident",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1020, 80]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "duplicate-check",
+              "leftValue": "={{$json.simulate_duplicate}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "55555555-5555-4555-8555-555555555556",
+      "name": "Duplicate Event?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1020, 420]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"event_id\": \"{{$json.event_id}}\",\n  \"status\": \"duplicate_ignored\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"side_effects_skipped\": true\n}"
+      },
+      "id": "55555555-5555-4555-8555-555555555557",
+      "name": "Duplicate Audit Record",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1280, 220]
+    },
+    {
+      "parameters": {
+        "url": "https://example.invalid/api/side-effect",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "record_id",
+              "value": "={{$json.record_id}}"
+            },
+            {
+              "name": "idempotency_key",
+              "value": "={{$json.idempotency_key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "55555555-5555-4555-8555-555555555558",
+      "name": "Side Effect Stub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1280, 560],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  let failure_class = 'none';\n  if (item.json.simulate_permanent_failure) failure_class = 'permanent';\n  if (item.json.simulate_retryable_failure) failure_class = 'retryable';\n  return { json: { ...item.json, failure_class, replay_allowed: failure_class === 'retryable' } };\n});"
+      },
+      "id": "55555555-5555-4555-8555-555555555559",
+      "name": "Classify Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1540, 560]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "retryable-check",
+              "leftValue": "={{$json.failure_class}}",
+              "rightValue": "retryable",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "55555555-5555-4555-8555-555555555560",
+      "name": "Retryable Failure?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1800, 560]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"event_id\": \"{{$json.event_id}}\",\n  \"record_id\": \"{{$json.record_id}}\",\n  \"status\": \"incident_recorded\",\n  \"failure_class\": \"{{$json.failure_class}}\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"operator_action\": \"review_then_replay\",\n  \"replay_allowed\": {{$json.replay_allowed}}\n}"
+      },
+      "id": "55555555-5555-4555-8555-555555555561",
+      "name": "Incident Record",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2060, 420]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"event_id\": \"{{$json.event_id}}\",\n  \"record_id\": \"{{$json.record_id}}\",\n  \"status\": \"completed\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"incident_required\": false\n}"
+      },
+      "id": "55555555-5555-4555-8555-555555555562",
+      "name": "Completed Audit Record",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2060, 700]
+    },
+    {
+      "parameters": {
+        "url": "https://example.invalid/alerts/workflow-incident",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_id",
+              "value": "={{$json.event_id}}"
+            },
+            {
+              "name": "operator_action",
+              "value": "={{$json.operator_action}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "55555555-5555-4555-8555-555555555563",
+      "name": "Alert Stub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2320, 420],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"event_id\": \"{{$json.event_id}}\",\n  \"status\": \"ready_for_replay_after_fix\",\n  \"replay_allowed\": {{$json.replay_allowed}},\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "55555555-5555-4555-8555-555555555564",
+      "name": "Replay After Fix",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2580, 420]
+    }
+  ],
+  "connections": {
+    "Manual Demo Trigger": {
+      "main": [[{ "node": "Mock Incoming Event", "type": "main", "index": 0 }]]
+    },
+    "Mock Incoming Event": {
+      "main": [[{ "node": "Validate + Idempotency Key", "type": "main", "index": 0 }]]
+    },
+    "Validate + Idempotency Key": {
+      "main": [[{ "node": "Payload Valid?", "type": "main", "index": 0 }]]
+    },
+    "Payload Valid?": {
+      "main": [
+        [{ "node": "Duplicate Event?", "type": "main", "index": 0 }],
+        [{ "node": "Invalid Payload Incident", "type": "main", "index": 0 }]
+      ]
+    },
+    "Duplicate Event?": {
+      "main": [
+        [{ "node": "Duplicate Audit Record", "type": "main", "index": 0 }],
+        [{ "node": "Side Effect Stub", "type": "main", "index": 0 }]
+      ]
+    },
+    "Side Effect Stub": {
+      "main": [[{ "node": "Classify Result", "type": "main", "index": 0 }]]
+    },
+    "Classify Result": {
+      "main": [[{ "node": "Retryable Failure?", "type": "main", "index": 0 }]]
+    },
+    "Retryable Failure?": {
+      "main": [
+        [{ "node": "Incident Record", "type": "main", "index": 0 }],
+        [{ "node": "Completed Audit Record", "type": "main", "index": 0 }]
+      ]
+    },
+    "Incident Record": {
+      "main": [[{ "node": "Alert Stub", "type": "main", "index": 0 }]]
+    },
+    "Alert Stub": {
+      "main": [[{ "node": "Replay After Fix", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-06-20T00:00:00.000Z",
+  "versionId": "synthetic-reliability-demo"
+}

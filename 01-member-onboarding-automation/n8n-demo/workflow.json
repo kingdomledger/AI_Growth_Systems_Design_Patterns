@@ -1,0 +1,180 @@
+{
+  "name": "Synthetic Member Onboarding Automation",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "11111111-1111-4111-8111-111111111111",
+      "name": "Manual Demo Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 240]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"application_id\": \"app_demo_001\",\n  \"submitted_at\": \"2026-06-20T09:00:00Z\",\n  \"applicant\": {\n    \"name\": \"Demo Applicant\",\n    \"contact_ref\": \"demo-applicant-at-example-invalid\",\n    \"region\": \"APAC\"\n  },\n  \"requested_access\": \"member_portal\",\n  \"review_decision\": \"approve\",\n  \"admin_override\": false,\n  \"prior_status\": \"new\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111112",
+      "name": "Mock Application Intake",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [240, 240]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const data = item.json;\n  const contactRef = String(data.applicant.contact_ref).trim().toLowerCase();\n  return {\n    json: {\n      ...data,\n      applicant: { ...data.applicant, contact_ref: contactRef },\n      idempotency_key: `${data.application_id}:${contactRef}`,\n      normalized_at: new Date().toISOString()\n    }\n  };\n});"
+      },
+      "id": "11111111-1111-4111-8111-111111111113",
+      "name": "Normalize + Idempotency Key",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 240]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "prior-status-check",
+              "leftValue": "={{$json.prior_status}}",
+              "rightValue": "duplicate",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "11111111-1111-4111-8111-111111111114",
+      "name": "Duplicate / Prior Status?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [760, 240]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"status\": \"needs_operator_review\",\n  \"reason\": \"Duplicate or prior status found\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111115",
+      "name": "Route To Review Queue",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1020, 80]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const decision = item.json.admin_override ? 'admin_override' : item.json.review_decision;\n  const routes = {\n    approve: 'grant_access',\n    reject: 'deny_access',\n    revoke: 'revoke_access',\n    admin_override: 'operator_override'\n  };\n  return { json: { ...item.json, decision, provisioning_action: routes[decision] || 'needs_review' } };\n});"
+      },
+      "id": "11111111-1111-4111-8111-111111111116",
+      "name": "Decision Router",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1020, 360]
+    },
+    {
+      "parameters": {
+        "url": "https://example.invalid/provisioning/{{$json.provisioning_action}}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "application_id",
+              "value": "={{$json.application_id}}"
+            },
+            {
+              "name": "idempotency_key",
+              "value": "={{$json.idempotency_key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11111111-1111-4111-8111-111111111117",
+      "name": "Provisioning Stub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1280, 360],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "https://example.invalid/notifications/member-status",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "application_id",
+              "value": "={{$json.application_id}}"
+            },
+            {
+              "name": "decision",
+              "value": "={{$json.decision}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11111111-1111-4111-8111-111111111118",
+      "name": "Notification Stub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, 360],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"application_id\": \"{{$json.application_id}}\",\n  \"status\": \"completed\",\n  \"decision\": \"{{$json.decision}}\",\n  \"provisioning_action\": \"{{$json.provisioning_action}}\",\n  \"repair_required\": false,\n  \"audit_type\": \"synthetic_demo\"\n}"
+      },
+      "id": "11111111-1111-4111-8111-111111111119",
+      "name": "Completed Audit Record",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1800, 360]
+    }
+  ],
+  "connections": {
+    "Manual Demo Trigger": {
+      "main": [[{ "node": "Mock Application Intake", "type": "main", "index": 0 }]]
+    },
+    "Mock Application Intake": {
+      "main": [[{ "node": "Normalize + Idempotency Key", "type": "main", "index": 0 }]]
+    },
+    "Normalize + Idempotency Key": {
+      "main": [[{ "node": "Duplicate / Prior Status?", "type": "main", "index": 0 }]]
+    },
+    "Duplicate / Prior Status?": {
+      "main": [
+        [{ "node": "Route To Review Queue", "type": "main", "index": 0 }],
+        [{ "node": "Decision Router", "type": "main", "index": 0 }]
+      ]
+    },
+    "Decision Router": {
+      "main": [[{ "node": "Provisioning Stub", "type": "main", "index": 0 }]]
+    },
+    "Provisioning Stub": {
+      "main": [[{ "node": "Notification Stub", "type": "main", "index": 0 }]]
+    },
+    "Notification Stub": {
+      "main": [[{ "node": "Completed Audit Record", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-06-20T00:00:00.000Z",
+  "versionId": "synthetic-onboarding-demo"
+}

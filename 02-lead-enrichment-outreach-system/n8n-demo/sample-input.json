@@ -1,0 +1,12 @@
+{
+  "batch_id": "lead_batch_demo_001",
+  "lead": {
+    "source_ref": "public-directory-demo",
+    "display_name": "Example Operator",
+    "profile_summary": "Runs a public newsletter about operations systems.",
+    "contact_ref": "example-operator-at-example-invalid"
+  },
+  "review_status": "approved",
+  "rerun_requested": false,
+  "cancel_requested": false
+}
