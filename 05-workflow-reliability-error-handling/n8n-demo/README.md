@@ -5,7 +5,7 @@ This is a synthetic n8n workflow built for the public portfolio. It demonstrates
 ## What It Shows
 
 - Manual/webhook-style event intake
-- Payload validation before side effects
+- Required-field checks before side effects
 - Idempotency key construction
 - Duplicate detection branch
 - Retryable vs permanent failure routing

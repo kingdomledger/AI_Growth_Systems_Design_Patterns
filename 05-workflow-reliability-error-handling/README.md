@@ -16,7 +16,7 @@ Sanitized cross-system case study based on retry paths, rerun controls, cached f
 
 - Webhook/event dedupe
 - Idempotency keys
-- Validation before side effects
+- Required-field checks before side effects
 - Retryable vs permanent failures
 - Incident records
 - Operator review and replay
@@ -24,7 +24,7 @@ Sanitized cross-system case study based on retry paths, rerun controls, cached f
 
 ## Operational Complexity
 
-- Validation before side effects so bad payloads do not mutate downstream state
+- Required-field checks before downstream side effects
 - Idempotency key and duplicate branch to prevent repeated handoffs
 - Retryable vs permanent failure classification
 - Incident record and alert stub for operator visibility
@@ -33,7 +33,7 @@ Sanitized cross-system case study based on retry paths, rerun controls, cached f
 ## How It Works
 
 1. A synthetic event enters the workflow.
-2. Required fields are validated before downstream action.
+2. Required fields are checked before downstream action.
 3. An idempotency key prevents duplicate side effects.
 4. Retryable errors are routed to operator-visible incident records.
 5. Permanent or blocked states require manual decision or cancellation.
@@ -44,7 +44,7 @@ Sanitized cross-system case study based on retry paths, rerun controls, cached f
 
 ```mermaid
 flowchart TD
-  A[Webhook or scheduled event] --> B[Validate payload]
+  A[Webhook or scheduled event] --> B[Check required fields]
   B --> C{Valid?}
   C -- No --> D[Incident record]
   C -- Yes --> E[Build idempotency key]
@@ -65,13 +65,15 @@ flowchart TD
 
 ## Example Payload
 
+IDs are synthetic public examples. They represent stable workflow keys such as contact references, row IDs, form submissions, review records, or handoff keys.
+
 ```json
 {
-  "event_id": "evt_reliability_demo_001",
+  "event_id": "event_001",
   "event_type": "record.approved",
   "source": "synthetic_demo",
   "payload": {
-    "record_id": "rec_demo_001",
+    "record_id": "record_001",
     "operation": "sync_to_downstream_system",
     "simulate_failure": false
   }
@@ -82,7 +84,7 @@ flowchart TD
 
 ```json
 {
-  "incident_id": "inc_demo_001",
+  "incident_id": "incident_001",
   "category": "retryable_sync_failure",
   "severity": "warning",
   "retry": {
@@ -93,6 +95,8 @@ flowchart TD
   "operator_action": "Review incident, confirm availability, replay or repair state."
 }
 ```
+
+In this case study, checking required fields means confirming the workflow has enough data to dedupe, route, sync, or replay safely before it takes downstream action.
 
 ## What Was Sanitized
 

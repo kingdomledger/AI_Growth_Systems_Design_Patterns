@@ -1,9 +1,9 @@
 {
-  "application_id": "app_demo_001",
+  "application_id": "application_001",
   "submitted_at": "2026-06-20T09:00:00Z",
   "applicant": {
     "name": "Demo Applicant",
-    "contact_ref": "demo-applicant-at-example-invalid",
+    "contact_ref": "contact_ref_001",
     "region": "APAC"
   },
   "requested_access": "member_portal",

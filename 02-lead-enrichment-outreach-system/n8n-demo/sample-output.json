@@ -1,6 +1,6 @@
 {
-  "batch_id": "lead_batch_demo_001",
-  "lead_id": "lead_demo_001",
+  "batch_id": "lead_batch_001",
+  "lead_id": "lead_001",
   "status": "approved_for_handoff",
   "review_snapshot": {
     "fit_category": "operations_leader",
@@ -10,7 +10,7 @@
   "outbound_queue": {
     "stub_endpoint": "https://example.invalid/outbound/queue",
     "handoff_status": "queued",
-    "idempotency_key": "lead_demo_001:approved"
+    "idempotency_key": "lead_001:approved"
   },
   "reconciliation": {
     "events_expected": ["queued", "delivered", "reply_or_no_reply"],

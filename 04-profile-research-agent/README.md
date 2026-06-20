@@ -47,10 +47,12 @@ flowchart TD
 
 ## Example Input
 
+IDs are synthetic public examples. They represent stable workflow keys such as contact references, row IDs, form submissions, review records, or handoff keys.
+
 ```json
 {
-  "request_id": "profile_research_demo_001",
-  "target_ref": "profile_demo_001",
+  "request_id": "profile_research_request_001",
+  "target_ref": "profile_001",
   "goal": "Extract operationally useful profile signals for review.",
   "sources": [
     {

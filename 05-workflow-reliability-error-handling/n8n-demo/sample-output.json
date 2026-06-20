@@ -1,8 +1,8 @@
 {
-  "event_id": "evt_demo_001",
-  "record_id": "record_demo_001",
+  "event_id": "event_001",
+  "record_id": "record_001",
   "status": "incident_recorded",
-  "idempotency_key": "record_demo_001:approval_handoff",
+  "idempotency_key": "record_001:approval_handoff",
   "failure_class": "retryable",
   "incident": {
     "severity": "medium",

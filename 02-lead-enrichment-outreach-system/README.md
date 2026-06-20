@@ -64,19 +64,21 @@ flowchart TD
 
 ## Example Input
 
+IDs are synthetic public examples. They represent stable workflow keys such as contact references, row IDs, form submissions, review records, or handoff keys.
+
 ```csv
 lead_id,source_type,profile_ref,category_hint,contact_ref,notes
-lead_demo_001,public_directory,profile_alpha,automation_operator,contact_alpha,Strong workflow systems signal
-lead_demo_002,event_list,profile_beta,growth_ops,contact_beta,Needs category confirmation
+lead_001,public_directory,profile_alpha,automation_operator,contact_ref_001,Strong workflow systems signal
+lead_002,event_list,profile_beta,growth_ops,contact_ref_002,Needs category confirmation
 ```
 
 ## Example Output
 
 ```json
 {
-  "batch_id": "lead_ops_demo_2026_06_20",
+  "batch_id": "lead_batch_001",
   "approved_snapshot": {
-    "lead_id": "lead_demo_001",
+    "lead_id": "lead_001",
     "dedupe_status": "new",
     "enrichment_status": "complete",
     "ai_analysis": {

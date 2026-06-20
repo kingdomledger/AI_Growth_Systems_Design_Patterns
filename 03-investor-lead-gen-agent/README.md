@@ -53,9 +53,11 @@ flowchart TD
 
 ## Example Input
 
+IDs are synthetic public examples. They represent stable workflow keys such as contact references, row IDs, form submissions, review records, or handoff keys.
+
 ```json
 {
-  "run_id": "investor_agent_demo_001",
+  "run_id": "investor_agent_run_001",
   "company_context": {
     "stage": "example_stage",
     "market": "example_market"
@@ -83,7 +85,7 @@ flowchart TD
     "ranked_for_review": 6
   },
   "top_review_record": {
-    "lead_ref": "investor_demo_001",
+    "lead_ref": "investor_lead_001",
     "score": 84,
     "fit_tier": "high",
     "human_review_status": "pending"
@@ -98,4 +100,3 @@ This example removes real investor names, source URLs, company documents, actual
 ## What To Notice
 
 This is the most technical case study in the repo. It shows a stateful Python agent workflow with sourcing, scraping, LLM extraction, scoring, reset controls, and review exports.
-

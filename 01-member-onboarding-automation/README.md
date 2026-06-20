@@ -65,18 +65,20 @@ flowchart TD
 
 ## Example Input
 
+IDs are synthetic public examples. They represent stable workflow keys such as contact references, row IDs, form submissions, review records, or handoff keys.
+
 ```json
 {
   "event_id": "evt_member_onboarding_001",
   "application": {
-    "application_id": "app_demo_1042",
-    "member_ref": "member_demo_1042",
+    "application_id": "application_001",
+    "member_ref": "member_001",
     "requested_access": ["workspace", "resource_library"]
   },
   "review_context": {
     "source": "form_intake",
     "prior_status": null,
-    "duplicate_key": "member_demo_1042|access_program_demo"
+    "duplicate_key": "member_001|access_program"
   }
 }
 ```
@@ -86,7 +88,7 @@ flowchart TD
 ```json
 {
   "workflow_status": "completed",
-  "application_id": "app_demo_1042",
+  "application_id": "application_001",
   "decision": {
     "status": "approved",
     "admin_override_used": false

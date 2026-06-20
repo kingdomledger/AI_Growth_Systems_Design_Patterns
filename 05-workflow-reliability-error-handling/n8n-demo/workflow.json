@@ -13,7 +13,7 @@
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "{\n  \"event_id\": \"evt_demo_001\",\n  \"event_type\": \"record.approved\",\n  \"occurred_at\": \"2026-06-20T09:10:00Z\",\n  \"source_system\": \"demo_intake\",\n  \"record_id\": \"record_demo_001\",\n  \"operation\": \"approval_handoff\",\n  \"simulate_duplicate\": false,\n  \"simulate_retryable_failure\": true,\n  \"simulate_permanent_failure\": false\n}"
+        "jsonOutput": "{\n  \"event_id\": \"event_001\",\n  \"event_type\": \"record.approved\",\n  \"occurred_at\": \"2026-06-20T09:10:00Z\",\n  \"source_system\": \"synthetic_intake\",\n  \"record_id\": \"record_001\",\n  \"operation\": \"approval_handoff\",\n  \"simulate_duplicate\": false,\n  \"simulate_retryable_failure\": true,\n  \"simulate_permanent_failure\": false\n}"
       },
       "id": "55555555-5555-4555-8555-555555555552",
       "name": "Mock Incoming Event",
@@ -23,10 +23,10 @@
     },
     {
       "parameters": {
-        "jsCode": "return items.map(item => {\n  const required = ['event_id', 'record_id', 'operation'];\n  const missing = required.filter(key => !item.json[key]);\n  return {\n    json: {\n      ...item.json,\n      valid_payload: missing.length === 0,\n      missing_fields: missing,\n      idempotency_key: `${item.json.record_id || 'missing'}:${item.json.operation || 'missing'}`\n    }\n  };\n});"
+        "jsCode": "return items.map(item => {\n  const required = ['event_id', 'record_id', 'operation'];\n  const missing = required.filter(key => !item.json[key]);\n  return {\n    json: {\n      ...item.json,\n      required_fields_present: missing.length === 0,\n      missing_fields: missing,\n      idempotency_key: `${item.json.record_id || 'missing'}:${item.json.operation || 'missing'}`\n    }\n  };\n});"
       },
       "id": "55555555-5555-4555-8555-555555555553",
-      "name": "Validate + Idempotency Key",
+      "name": "Check Required Fields + Idempotency Key",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [500, 300]
@@ -42,7 +42,7 @@
           "conditions": [
             {
               "id": "valid-check",
-              "leftValue": "={{$json.valid_payload}}",
+              "leftValue": "={{$json.required_fields_present}}",
               "rightValue": true,
               "operator": {
                 "type": "boolean",
@@ -54,7 +54,7 @@
         }
       },
       "id": "55555555-5555-4555-8555-555555555554",
-      "name": "Payload Valid?",
+      "name": "Required Fields Present?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [760, 300]
@@ -65,7 +65,7 @@
         "jsonOutput": "={\n  \"event_id\": \"{{$json.event_id}}\",\n  \"status\": \"rejected_before_side_effects\",\n  \"missing_fields\": {{$json.missing_fields}},\n  \"operator_action\": \"fix_payload_then_replay\"\n}"
       },
       "id": "55555555-5555-4555-8555-555555555555",
-      "name": "Invalid Payload Incident",
+      "name": "Missing Data Incident",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [1020, 80]
@@ -236,15 +236,15 @@
       "main": [[{ "node": "Mock Incoming Event", "type": "main", "index": 0 }]]
     },
     "Mock Incoming Event": {
-      "main": [[{ "node": "Validate + Idempotency Key", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "Check Required Fields + Idempotency Key", "type": "main", "index": 0 }]]
     },
-    "Validate + Idempotency Key": {
-      "main": [[{ "node": "Payload Valid?", "type": "main", "index": 0 }]]
+    "Check Required Fields + Idempotency Key": {
+      "main": [[{ "node": "Required Fields Present?", "type": "main", "index": 0 }]]
     },
-    "Payload Valid?": {
+    "Required Fields Present?": {
       "main": [
         [{ "node": "Duplicate Event?", "type": "main", "index": 0 }],
-        [{ "node": "Invalid Payload Incident", "type": "main", "index": 0 }]
+        [{ "node": "Missing Data Incident", "type": "main", "index": 0 }]
       ]
     },
     "Duplicate Event?": {
