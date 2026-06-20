@@ -40,6 +40,60 @@ Sanitized cross-system case study based on retry paths, rerun controls, cached f
 6. Reconciliation updates reporting and final state after downstream events.
 7. Repair paths allow controlled replay after the root cause is fixed.
 
+## Architecture
+
+```mermaid
+flowchart TD
+  A[Webhook or scheduled event] --> B[Validate payload]
+  B --> C{Valid?}
+  C -- No --> D[Incident record]
+  C -- Yes --> E[Build idempotency key]
+  E --> F{Already processed?}
+  F -- Yes --> G[Duplicate-safe response]
+  F -- No --> H[Run workflow action]
+  H --> I{Failure type?}
+  I -- Retryable --> J[Retry or rerun control]
+  I -- Blocked/manual --> K[Operator review]
+  I -- None --> L[Mark completed]
+  J --> M[Replay after fix]
+  K --> N[Cancel, override, or repair]
+  M --> H
+  N --> O[Reconcile state]
+  L --> O
+  O --> P[Audit/reporting sync]
+```
+
+## Example Payload
+
+```json
+{
+  "event_id": "evt_reliability_demo_001",
+  "event_type": "record.approved",
+  "source": "synthetic_demo",
+  "payload": {
+    "record_id": "rec_demo_001",
+    "operation": "sync_to_downstream_system",
+    "simulate_failure": false
+  }
+}
+```
+
+## Example Incident Record
+
+```json
+{
+  "incident_id": "inc_demo_001",
+  "category": "retryable_sync_failure",
+  "severity": "warning",
+  "retry": {
+    "attempt": 1,
+    "max_attempts": 3,
+    "replay_ready": true
+  },
+  "operator_action": "Review incident, confirm availability, replay or repair state."
+}
+```
+
 ## What Was Sanitized
 
 This example removes exact internal workflow names, live endpoints, provider names, credentials, private schema names, production payloads, and real execution logs.
@@ -53,11 +107,4 @@ Reliability is treated as part of the workflow design, not as an afterthought. T
 - [n8n-demo/workflow.json](./n8n-demo/workflow.json): importable synthetic workflow
 - [n8n-demo/sample-payload.json](./n8n-demo/sample-payload.json): mock event payload
 - [n8n-demo/sample-output.json](./n8n-demo/sample-output.json): mock incident/replay result
-- `assets/n8n-workflow-snapshot.png`: add after importing the synthetic workflow and capturing a safe canvas-only screenshot
-
-## Files
-
-- [diagram.mmd](./diagram.mmd): workflow map
-- [sample-payload.json](./sample-payload.json): synthetic incoming event
-- [incident-log-example.json](./incident-log-example.json): synthetic incident record
-- [n8n-demo](./n8n-demo): optional synthetic demo workflow for later import/screenshot
+- Future screenshot path: `assets/n8n-workflow-snapshot.png`

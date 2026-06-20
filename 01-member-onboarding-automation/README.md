@@ -38,6 +38,70 @@ Sanitized case study based on onboarding and registration workflows with review 
 6. Sync issues are routed to operator repair instead of being hidden.
 7. The final state is written as a completed audit record.
 
+## Architecture
+
+```mermaid
+flowchart TD
+  A[Application intake] --> B[Normalize submission]
+  B --> C{Duplicate or prior status?}
+  C -- New application --> D[Create review item]
+  C -- Existing record --> E[Update review context]
+  D --> F{Human decision}
+  E --> F
+  F -- Approve --> G[Update operational record]
+  F -- Reject --> H[Record rejection outcome]
+  F -- Revoke --> I[Disable access state]
+  F -- Admin override --> J[Repair prior decision state]
+  G --> K[Access provisioning handoff]
+  H --> L[Notification handoff]
+  I --> L
+  J --> G
+  K --> M{Sync issue?}
+  M -- Yes --> N[Operator repair queue]
+  M -- No --> O[Completed audit record]
+  N --> P[Retry or reconcile state]
+  P --> O
+```
+
+## Example Input
+
+```json
+{
+  "event_id": "evt_member_onboarding_001",
+  "application": {
+    "application_id": "app_demo_1042",
+    "member_ref": "member_demo_1042",
+    "requested_access": ["workspace", "resource_library"]
+  },
+  "review_context": {
+    "source": "form_intake",
+    "prior_status": null,
+    "duplicate_key": "member_demo_1042|access_program_demo"
+  }
+}
+```
+
+## Example Output
+
+```json
+{
+  "workflow_status": "completed",
+  "application_id": "app_demo_1042",
+  "decision": {
+    "status": "approved",
+    "admin_override_used": false
+  },
+  "handoff": {
+    "operational_record": "updated",
+    "access_state": "provisioned",
+    "notification": "queued"
+  },
+  "repair": {
+    "required": false
+  }
+}
+```
+
 ## What Was Sanitized
 
 This example removes vertical-specific labels, real applicants, private access rules, exact sheet/database schemas, workspace names, provider names, and production endpoints.
@@ -51,10 +115,4 @@ The important pattern is not just intake automation. It is controlled state mana
 - [n8n-demo/workflow.json](./n8n-demo/workflow.json): importable synthetic workflow
 - [n8n-demo/sample-input.json](./n8n-demo/sample-input.json): mock application payload
 - [n8n-demo/sample-output.json](./n8n-demo/sample-output.json): mock audit/provisioning result
-- `assets/n8n-workflow-snapshot.png`: add after importing the synthetic workflow and capturing a safe canvas-only screenshot
-
-## Files
-
-- [diagram.mmd](./diagram.mmd): workflow map
-- [sample-input.json](./sample-input.json): synthetic application event
-- [sample-output.json](./sample-output.json): synthetic final decision/audit record
+- Future screenshot path: `assets/n8n-workflow-snapshot.png`

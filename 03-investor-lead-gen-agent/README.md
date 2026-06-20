@@ -33,6 +33,64 @@ Sanitized case study based on a local Python CLI agent for sourcing, enriching, 
 8. Scoring ranks candidates against the company profile and ICP.
 9. The agent exports a review CSV and audit JSON for human review.
 
+## Architecture
+
+```mermaid
+flowchart TD
+  A[Company context input] --> B[Build structured company profile]
+  B --> C[Ask ICP questions]
+  C --> D[Source candidate leads]
+  D --> E[Deduplicate against local state]
+  E --> F[Scrape public pages]
+  F --> G[Collect evidence links]
+  G --> H[LLM research extraction]
+  H --> I[Score against profile and ICP]
+  I --> J[Ranked review CSV]
+  I --> K[Audit JSON export]
+  J --> L[Human review]
+  K --> L
+```
+
+## Example Input
+
+```json
+{
+  "run_id": "investor_agent_demo_001",
+  "company_context": {
+    "stage": "example_stage",
+    "market": "example_market"
+  },
+  "source_inputs": {
+    "input_list_count": 12,
+    "source_page_count": 3,
+    "search_enabled": false
+  },
+  "review_settings": {
+    "min_score": 60,
+    "human_review_required": true
+  }
+}
+```
+
+## Example Output
+
+```json
+{
+  "status": "review_export_ready",
+  "summary": {
+    "candidates_sourced": 24,
+    "deduped_candidates": 17,
+    "ranked_for_review": 6
+  },
+  "top_review_record": {
+    "lead_ref": "investor_demo_001",
+    "score": 84,
+    "fit_tier": "high",
+    "human_review_status": "pending"
+  }
+}
+```
+
 ## What Was Sanitized
 
 This example removes real investor names, source URLs, company documents, actual outputs, confidential fundraising context, API keys, private scoring prompts, and generated lead data.
@@ -40,10 +98,4 @@ This example removes real investor names, source URLs, company documents, actual
 ## What To Notice
 
 This is the most technical case study in the repo. It shows a stateful Python agent workflow with sourcing, scraping, LLM extraction, scoring, reset controls, and review exports.
-
-## Files
-
-- [diagram.mmd](./diagram.mmd): workflow map
-- [sample-input.json](./sample-input.json): synthetic agent run request
-- [sample-output.json](./sample-output.json): synthetic ranked review output
 

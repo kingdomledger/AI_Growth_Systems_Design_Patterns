@@ -40,6 +40,60 @@ Sanitized case study based on a two-part lead operations system: enrichment and 
 6. Approved records are snapshotted and handed off idempotently to an outbound queue.
 7. Delivery events, replies, reporting, and cancellations are handled in a separate lifecycle layer.
 
+## Architecture
+
+```mermaid
+flowchart TD
+  A[Lead intake cockpit] --> B[Normalize and dedupe]
+  B --> C[Contact validation]
+  C --> D[Public-source enrichment]
+  D --> E[AI-assisted analysis]
+  E --> F[Draft or recommendation generation]
+  F --> G{Human gate}
+  G -- Needs edit --> H[Operator edits or rerun]
+  G -- Reject --> I[Archive with reason]
+  G -- Approve --> J[Immutable approval snapshot]
+  H --> E
+  J --> K[Idempotent outbound handoff]
+  K --> L[Outbound queue]
+  L --> M[Manual or controlled sender]
+  M --> N[Delivery and reply events]
+  N --> O[Reporting sync]
+  L --> P[Cancellation control]
+```
+
+## Example Input
+
+```csv
+lead_id,source_type,profile_ref,category_hint,contact_ref,notes
+lead_demo_001,public_directory,profile_alpha,automation_operator,contact_alpha,Strong workflow systems signal
+lead_demo_002,event_list,profile_beta,growth_ops,contact_beta,Needs category confirmation
+```
+
+## Example Output
+
+```json
+{
+  "batch_id": "lead_ops_demo_2026_06_20",
+  "approved_snapshot": {
+    "lead_id": "lead_demo_001",
+    "dedupe_status": "new",
+    "enrichment_status": "complete",
+    "ai_analysis": {
+      "fit_tier": "high",
+      "confidence": 0.86
+    },
+    "human_gate": {
+      "status": "approved"
+    },
+    "outbound_handoff": {
+      "queued": true,
+      "sender_mode": "manual_or_controlled"
+    }
+  }
+}
+```
+
 ## What Was Sanitized
 
 This example removes vertical-specific labels, real leads, real sources, exact provider names, campaign copy, mailbox/provider details, private schemas, workflow IDs, and production endpoints.
@@ -53,10 +107,4 @@ The strongest part of this system is the boundary between enrichment/review and 
 - [n8n-demo/workflow.json](./n8n-demo/workflow.json): importable synthetic workflow
 - [n8n-demo/sample-input.json](./n8n-demo/sample-input.json): mock lead intake payload
 - [n8n-demo/sample-output.json](./n8n-demo/sample-output.json): mock approved handoff result
-- `assets/n8n-workflow-snapshot.png`: add after importing the synthetic workflow and capturing a safe canvas-only screenshot
-
-## Files
-
-- [diagram.mmd](./diagram.mmd): workflow map
-- [sample-input.csv](./sample-input.csv): synthetic intake records
-- [sample-output.json](./sample-output.json): synthetic approved/review queue output
+- Future screenshot path: `assets/n8n-workflow-snapshot.png`

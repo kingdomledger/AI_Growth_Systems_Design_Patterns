@@ -20,6 +20,8 @@ Start with [05-workflow-reliability-error-handling](./05-workflow-reliability-er
 
 The n8n demos are synthetic workflows built only for this portfolio. They demonstrate how I think about workflow architecture without exposing real company systems.
 
+Each case study is README-first: the architecture diagram and compact example input/output are embedded directly in the folder README. The `n8n-demo/` subfolders are practical importable examples for the three workflow-orchestration case studies.
+
 ## What This Shows
 
 - I can turn messy operational processes into repeatable workflows.
