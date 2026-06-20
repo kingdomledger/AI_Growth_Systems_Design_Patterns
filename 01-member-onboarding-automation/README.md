@@ -21,11 +21,10 @@ flowchart TD
   F -- Approve --> G[Update operational record]
   F -- Reject --> H[Record rejection outcome]
   F -- Revoke --> I[Disable access state]
-  F -- Admin override --> J[Repair prior decision state]
+  F -- Admin override --> J[Admin override / repair review]
   G --> K[Access provisioning handoff]
   H --> L[Notification handoff]
   I --> L
-  J --> G
   K --> M{Sync issue?}
   M -- Yes --> N[Operator repair queue]
   M -- No --> O[Completed audit record]
@@ -77,7 +76,8 @@ IDs are public example keys. They represent stable workflow references such as c
 ## What To Notice
 
 - Review state is controlled before access state changes.
-- Admin override and repair paths are part of the design, not afterthoughts.
+- Admin override is separated as an operator review path before any automatic access change.
+- Retry/reconcile is reserved for sync or provisioning repair, not every override case.
 - The workflow creates a final audit record for replay and reconciliation.
 
 ## Synthetic n8n Demo
