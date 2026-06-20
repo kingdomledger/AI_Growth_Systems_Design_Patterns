@@ -1,0 +1,14 @@
+flowchart TD
+  A[Research request] --> B[Collect source snippets]
+  B --> C[LLM extraction layer]
+  C --> D[Structured JSON draft]
+  D --> E{Schema valid?}
+  E -- No --> F[Repair prompt or fallback parser]
+  F --> D
+  E -- Yes --> G{Confidence sufficient?}
+  G -- Yes --> H[Human review: quick approve]
+  G -- No --> I[Human review: inspect evidence]
+  H --> J[Approved structured output]
+  I --> J
+  J --> K[Downstream workflow handoff]
+

@@ -1,0 +1,22 @@
+{
+  "event_id": "evt_onboarding_demo_001",
+  "submitted_at": "2026-06-20T09:15:00Z",
+  "applicant": {
+    "applicant_id": "app_demo_1042",
+    "display_name": "Demo Applicant",
+    "contact_ref": "contact_demo_1042",
+    "profile_url": "https://example.invalid/profiles/demo-applicant"
+  },
+  "registration": {
+    "program": "creator_access_demo",
+    "region": "example-region",
+    "experience_level": "intermediate",
+    "requested_access": ["workspace", "resource_library"]
+  },
+  "review_context": {
+    "source": "public_form",
+    "duplicate_key": "demo-applicant|contact_demo_1042",
+    "risk_flags": []
+  }
+}
+

@@ -1,0 +1,5 @@
+lead_id,source_type,profile_ref,category_hint,public_activity_hint,notes
+lead_demo_001,public_directory,profile_alpha,workflow_builder,active_recently,Strong operational automation theme
+lead_demo_002,newsletter_mention,profile_beta,growth_operator,moderate_activity,Needs category confirmation
+lead_demo_003,event_speaker_list,profile_gamma,ai_ops,active_recently,Potential fit for AI systems discussion
+

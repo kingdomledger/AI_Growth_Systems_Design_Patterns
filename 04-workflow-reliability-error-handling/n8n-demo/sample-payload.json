@@ -1,0 +1,13 @@
+{
+  "event_id": "evt_n8n_demo_001",
+  "event_type": "record.approved",
+  "occurred_at": "2026-06-20T11:00:00Z",
+  "source": "n8n_synthetic_demo",
+  "payload": {
+    "record_id": "rec_n8n_demo_001",
+    "operation": "sync_to_mock_system",
+    "simulate_failure": false,
+    "already_processed": false
+  }
+}
+

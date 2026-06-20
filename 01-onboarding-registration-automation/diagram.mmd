@@ -1,0 +1,20 @@
+flowchart TD
+  A[Form intake] --> B[Normalize submission]
+  B --> C{Duplicate or prior record?}
+  C -- New applicant --> D[Create review queue item]
+  C -- Existing applicant --> E[Attach to existing profile]
+  D --> F{Human decision}
+  E --> F
+  F -- Approve --> G[CRM/database upsert]
+  F -- Reject --> H[Record rejection reason]
+  F -- Revoke --> I[Disable access]
+  G --> J[Provision access]
+  J --> K[Send approval notification]
+  H --> L[Send rejection notification]
+  I --> M[Send revocation notification]
+  J --> N{Provisioning failed?}
+  N -- Yes --> O[Recovery queue]
+  N -- No --> P[Completed audit record]
+  O --> Q[Replay after fix]
+  Q --> J
+

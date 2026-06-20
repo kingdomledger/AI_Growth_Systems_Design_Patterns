@@ -1,0 +1,22 @@
+{
+  "event_id": "evt_onboarding_demo_001",
+  "workflow_status": "completed",
+  "applicant_id": "app_demo_1042",
+  "decision": {
+    "status": "approved",
+    "reviewed_by": "operator_demo",
+    "reviewed_at": "2026-06-20T09:24:00Z",
+    "notes": "Synthetic approval for portfolio example."
+  },
+  "sync_results": {
+    "database_upsert": "updated",
+    "crm_record": "synced",
+    "access_provisioning": "granted",
+    "notification": "queued"
+  },
+  "recovery": {
+    "required": false,
+    "reason": null
+  }
+}
+

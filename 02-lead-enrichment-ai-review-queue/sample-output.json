@@ -1,0 +1,42 @@
+{
+  "batch_id": "lead_review_demo_2026_06_20",
+  "records": [
+    {
+      "lead_id": "lead_demo_001",
+      "dedupe_status": "new",
+      "enrichment_status": "complete",
+      "ai_assessment": {
+        "fit_tier": "high",
+        "confidence": 0.86,
+        "signals": ["workflow automation", "operator audience", "recent public activity"]
+      },
+      "review_status": "ready_for_human_review",
+      "recommended_next_action": "approve_or_request_context"
+    },
+    {
+      "lead_id": "lead_demo_002",
+      "dedupe_status": "new",
+      "enrichment_status": "partial",
+      "ai_assessment": {
+        "fit_tier": "medium",
+        "confidence": 0.58,
+        "signals": ["growth operations", "unclear current activity"]
+      },
+      "review_status": "needs_human_judgment",
+      "recommended_next_action": "manual_research"
+    },
+    {
+      "lead_id": "lead_demo_003",
+      "dedupe_status": "matched_prior_source",
+      "enrichment_status": "complete",
+      "ai_assessment": {
+        "fit_tier": "high",
+        "confidence": 0.79,
+        "signals": ["AI operations", "public speaking", "implementation focus"]
+      },
+      "review_status": "ready_for_human_review",
+      "recommended_next_action": "merge_and_review"
+    }
+  ]
+}
+

@@ -1,0 +1,25 @@
+{
+  "request_id": "research_demo_001",
+  "topic": "Example operator profile",
+  "goal": "Extract structured signals for workflow-systems fit.",
+  "sources": [
+    {
+      "source_id": "src_demo_001",
+      "source_type": "public_profile_summary",
+      "content": "The person writes about startup operations, automation, and using AI tools to reduce repetitive execution work."
+    },
+    {
+      "source_id": "src_demo_002",
+      "source_type": "public_project_note",
+      "content": "Recent project notes describe intake automation, review queues, and structured handoff records."
+    }
+  ],
+  "required_schema": [
+    "summary",
+    "operational_signals",
+    "ai_workflow_relevance",
+    "confidence",
+    "needs_human_review"
+  ]
+}
+
