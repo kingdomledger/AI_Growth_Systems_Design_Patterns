@@ -4,7 +4,7 @@ Importable n8n workflow for the member onboarding case study.
 
 ## Preview
 
-This screenshot is from the earlier compact demo. Refresh it after importing the expanded workflow.
+Current canvas snapshot of the importable workflow.
 
 ![n8n workflow snapshot](./n8n-workflow-snapshot.png)
 
