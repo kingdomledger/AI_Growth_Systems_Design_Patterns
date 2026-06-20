@@ -1,21 +1,16 @@
-# Synthetic n8n Demo: Lead Enrichment & Outreach System
+# n8n Demo
 
-This is a synthetic n8n workflow built for the public portfolio. It demonstrates lead enrichment, AI-assisted review, and outbound handoff concepts without copying private workflow exports, campaign copy, schemas, provider names, mailbox details, or production data.
+Importable n8n workflow for the lead enrichment and outreach case study.
 
-## What It Shows
+## Files
 
-- Lead intake from rough public-source records
-- Normalization and deduplication before enrichment
-- Enrichment and AI-analysis placeholder stages
-- Human review gate before outbound handoff
-- Approved snapshot and queue handoff
-- Cancellation, rerun, and event/reply reconciliation paths
+- `workflow.json`: workflow canvas
+- `sample-input.json`: reference input
+- `sample-output.json`: expected output shape
 
-## How To Use
+## Use
 
 1. Import `workflow.json` into a clean n8n workspace.
-2. Do not add credentials.
-3. Use `sample-input.json` as the mock intake reference.
-4. Screenshot only the workflow canvas after import.
-
-All endpoints use `https://example.invalid/...` and all data is synthetic.
+2. Run from the manual trigger.
+3. Use `sample-input.json` as the reference input.
+4. Capture a canvas-only screenshot later if needed.

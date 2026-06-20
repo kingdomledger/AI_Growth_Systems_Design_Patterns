@@ -1,5 +1,5 @@
 {
-  "name": "Synthetic Lead Enrichment Outreach System",
+  "name": "Lead Enrichment Outreach Demo",
   "active": false,
   "nodes": [
     {
@@ -16,7 +16,7 @@
         "jsonOutput": "{\n  \"batch_id\": \"lead_batch_001\",\n  \"lead\": {\n    \"source_ref\": \"public_directory\",\n    \"display_name\": \"Example Operator\",\n    \"profile_summary\": \"Runs a public newsletter about operations systems.\",\n    \"contact_ref\": \"contact_ref_001\"\n  },\n  \"review_status\": \"approved\",\n  \"rerun_requested\": false,\n  \"cancel_requested\": false\n}"
       },
       "id": "22222222-2222-4222-8222-222222222222",
-      "name": "Mock Lead Intake",
+      "name": "Lead Intake Example",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [240, 260]
@@ -83,7 +83,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return items.map(item => {\n  const summary = item.json.lead.profile_summary || '';\n  const confidence = summary.length > 20 ? 0.82 : 0.45;\n  return {\n    json: {\n      ...item.json,\n      ai_review: {\n        fit_category: 'operations_leader',\n        confidence,\n        note: 'Synthetic AI-analysis placeholder; not a private prompt or model output.'\n      }\n    }\n  };\n});"
+        "jsCode": "return items.map(item => {\n  const summary = item.json.lead.profile_summary || '';\n  const confidence = summary.length > 20 ? 0.82 : 0.45;\n  return {\n    json: {\n      ...item.json,\n      ai_review: {\n        fit_category: 'operations_leader',\n        confidence,\n        note: 'Example AI-analysis note.'\n      }\n    }\n  };\n});"
       },
       "id": "22222222-2222-4222-8222-222222222227",
       "name": "AI Analysis Placeholder",
@@ -180,9 +180,9 @@
   ],
   "connections": {
     "Manual Demo Trigger": {
-      "main": [[{ "node": "Mock Lead Intake", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "Lead Intake Example", "type": "main", "index": 0 }]]
     },
-    "Mock Lead Intake": {
+    "Lead Intake Example": {
       "main": [[{ "node": "Normalize + Dedupe Key", "type": "main", "index": 0 }]]
     },
     "Normalize + Dedupe Key": {
@@ -221,5 +221,5 @@
   "tags": [],
   "triggerCount": 0,
   "updatedAt": "2026-06-20T00:00:00.000Z",
-  "versionId": "synthetic-lead-outreach-demo"
+  "versionId": "lead-outreach-demo"
 }

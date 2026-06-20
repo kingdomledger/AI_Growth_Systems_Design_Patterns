@@ -1,5 +1,5 @@
 {
-  "name": "Synthetic Workflow Reliability Error Handling",
+  "name": "Workflow Reliability Demo",
   "active": false,
   "nodes": [
     {
@@ -16,7 +16,7 @@
         "jsonOutput": "{\n  \"event_id\": \"event_001\",\n  \"event_type\": \"record.approved\",\n  \"occurred_at\": \"2026-06-20T09:10:00Z\",\n  \"source_system\": \"synthetic_intake\",\n  \"record_id\": \"record_001\",\n  \"operation\": \"approval_handoff\",\n  \"simulate_duplicate\": false,\n  \"simulate_retryable_failure\": true,\n  \"simulate_permanent_failure\": false\n}"
       },
       "id": "55555555-5555-4555-8555-555555555552",
-      "name": "Mock Incoming Event",
+      "name": "Incoming Event Example",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [240, 300]
@@ -233,9 +233,9 @@
   ],
   "connections": {
     "Manual Demo Trigger": {
-      "main": [[{ "node": "Mock Incoming Event", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "Incoming Event Example", "type": "main", "index": 0 }]]
     },
-    "Mock Incoming Event": {
+    "Incoming Event Example": {
       "main": [[{ "node": "Check Required Fields + Idempotency Key", "type": "main", "index": 0 }]]
     },
     "Check Required Fields + Idempotency Key": {
@@ -280,5 +280,5 @@
   "tags": [],
   "triggerCount": 0,
   "updatedAt": "2026-06-20T00:00:00.000Z",
-  "versionId": "synthetic-reliability-demo"
+  "versionId": "reliability-demo"
 }

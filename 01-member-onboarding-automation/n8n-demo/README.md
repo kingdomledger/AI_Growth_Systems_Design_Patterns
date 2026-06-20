@@ -1,21 +1,16 @@
-# Synthetic n8n Demo: Member Onboarding Automation
+# n8n Demo
 
-This is a synthetic n8n workflow built for the public portfolio. It demonstrates the same operating principles as past onboarding automation work without copying private workflow exports, schemas, endpoints, provider names, access rules, or production data.
+Importable n8n workflow for the member onboarding case study.
 
-## What It Shows
+## Files
 
-- Manual/form-style intake with mock application data
-- Normalization before review
-- Duplicate and prior-status checks
-- Decision routing for approve, reject, revoke, and admin override
-- Provisioning and notification stubs using fake endpoints
-- Repair queue and completed audit output
+- `workflow.json`: workflow canvas
+- `sample-input.json`: reference input
+- `sample-output.json`: expected output shape
 
-## How To Use
+## Use
 
 1. Import `workflow.json` into a clean n8n workspace.
-2. Do not add credentials.
-3. Open the canvas and use the included `sample-input.json` as the mock payload reference.
-4. Capture only the workflow canvas if creating a public screenshot.
-
-All endpoints use `https://example.invalid/...` and are not intended to call real services.
+2. Run from the manual trigger.
+3. Use `sample-input.json` as the reference input.
+4. Capture a canvas-only screenshot later if needed.
