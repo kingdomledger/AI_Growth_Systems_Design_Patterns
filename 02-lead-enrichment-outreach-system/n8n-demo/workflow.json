@@ -280,7 +280,7 @@
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"event_type\": \"outbound.delivered\",\n  \"event_status\": \"delivered\",\n  \"handoff_status\": \"queued\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"idempotency_receipt_status\": \"recorded\",\n  \"idempotency_receipt_action\": \"outbound_handoff\"\n}",
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"event_type\": \"outbound.delivered\",\n  \"event_status\": \"delivered\",\n  \"handoff_status\": \"queued\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"outbound_handoff_already_processed\": true,\n  \"idempotency_receipt_status\": \"recorded\",\n  \"idempotency_receipt_action\": \"outbound_handoff\"\n}",
         "options": {}
       },
       "id": "473c84dd-9c81-4500-a560-9d60a2b2f102",
@@ -295,7 +295,7 @@
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"lifecycle_completed\",\n  \"events_recorded\": [\"approved\", \"queued\", \"delivered\"],\n  \"reporting_sync\": \"recorded\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"idempotency_receipt_status\": \"recorded\",\n  \"cancel_allowed\": true,\n  \"rerun_allowed\": true\n}",
+        "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"lifecycle_completed\",\n  \"events_recorded\": [\"approved\", \"queued\", \"delivered\"],\n  \"reporting_sync\": \"recorded\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"outbound_handoff_already_processed\": true,\n  \"idempotency_receipt_status\": \"recorded\",\n  \"cancel_allowed\": true,\n  \"rerun_allowed\": true\n}",
         "options": {}
       },
       "id": "791b54f6-9c79-4831-970a-6d1eaefd54b5",
