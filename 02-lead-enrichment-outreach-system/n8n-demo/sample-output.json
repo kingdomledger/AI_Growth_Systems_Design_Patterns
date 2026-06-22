@@ -31,6 +31,7 @@
     "handoff_status": "queued",
     "cancel_before_handoff": false,
     "idempotency_key": "lead_001:approved",
+    "outbound_handoff_already_processed": true,
     "idempotency_receipt_status": "recorded",
     "idempotency_receipt_action": "outbound_handoff"
   },
@@ -38,6 +39,7 @@
     "delivery_event": "outbound.delivered",
     "reporting_sync": "recorded",
     "idempotency_key": "lead_001:approved",
+    "outbound_handoff_already_processed": true,
     "idempotency_receipt_status": "recorded",
     "cancel_allowed": true,
     "rerun_allowed": true
