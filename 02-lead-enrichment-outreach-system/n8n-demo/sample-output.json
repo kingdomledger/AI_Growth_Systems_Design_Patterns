@@ -30,11 +30,15 @@
     "stub_endpoint": "https://example.invalid/outbound/queue",
     "handoff_status": "queued",
     "cancel_before_handoff": false,
-    "idempotency_key": "lead_001:approved"
+    "idempotency_key": "lead_001:approved",
+    "idempotency_receipt_status": "recorded",
+    "idempotency_receipt_action": "outbound_handoff"
   },
   "lifecycle": {
     "delivery_event": "outbound.delivered",
     "reporting_sync": "recorded",
+    "idempotency_key": "lead_001:approved",
+    "idempotency_receipt_status": "recorded",
     "cancel_allowed": true,
     "rerun_allowed": true
   }
