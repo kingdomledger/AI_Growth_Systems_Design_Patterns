@@ -3,13 +3,13 @@
   "nodes": [
     {
       "parameters": {},
-      "id": "66d4283c-a500-4f0e-ba1a-fd6887070bc8",
+      "id": "b62317fe-5af9-4d9a-a226-0d674212cf57",
       "name": "Manual Demo Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        336,
-        1488
+        17920,
+        5424
       ]
     },
     {
@@ -18,13 +18,13 @@
         "jsonOutput": "{\n  \"batch_id\": \"lead_batch_001\",\n  \"lead\": {\n    \"source_ref\": \"public_directory\",\n    \"display_name\": \"Example Operator\",\n    \"profile_summary\": \"Runs a public newsletter about operations systems.\",\n    \"category_hint\": \"automation_operator\",\n    \"contact_ref\": \"contact_ref_001\"\n  },\n  \"existing_record\": false,\n  \"review_status\": \"approved\",\n  \"rerun_requested\": false,\n  \"cancel_before_handoff\": false\n}",
         "options": {}
       },
-      "id": "a395329b-465f-4d0e-b4f8-23d71301ecd0",
+      "id": "79cc21a4-52de-4c2a-9a35-36747c83e289",
       "name": "Lead Intake Example",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        560,
-        1488
+        18144,
+        5424
       ]
     },
     {
@@ -51,13 +51,13 @@
         },
         "options": {}
       },
-      "id": "9abf254d-b1c5-452a-bdbf-7d056887b2df",
+      "id": "fa3bad9a-2904-46fe-8428-909c6dff4392",
       "name": "Cancel Before Handoff?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        2352,
-        992
+        19936,
+        4928
       ]
     },
     {
@@ -66,13 +66,13 @@
         "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"cancelled_before_handoff\",\n  \"reason\": \"Operator cancellation requested\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}",
         "options": {}
       },
-      "id": "eec7d74e-7c2d-4890-9799-121132652de1",
+      "id": "5f24b248-1ed2-4060-9f50-dba5f1fdb669",
       "name": "Cancellation Record",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2624,
-        976
+        20208,
+        4912
       ]
     },
     {
@@ -99,13 +99,13 @@
         },
         "options": {}
       },
-      "id": "ddfaceb5-9150-47e5-8ae9-ab05708b4326",
+      "id": "9e45cc0a-d0f7-4d12-99db-10c12c8b34ef",
       "name": "Existing Lead?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1008,
-        1488
+        18592,
+        5424
       ]
     },
     {
@@ -114,13 +114,13 @@
         "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"existing_record_review\",\n  \"dedupe_key\": \"{{$json.dedupe_key}}\",\n  \"operator_action\": \"review_existing_record_before_rerun\"\n}",
         "options": {}
       },
-      "id": "c4c820b2-cb81-45a9-9d2e-217ff2eefee1",
+      "id": "ec840ea0-9bfb-4bcd-9511-b8f49c2a474f",
       "name": "Existing Record Review",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1232,
-        1392
+        18816,
+        5328
       ]
     },
     {
@@ -129,13 +129,13 @@
         "jsonOutput": "={\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"lead\": {{$json.lead}},\n  \"dedupe_key\": \"{{$json.dedupe_key}}\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"enrichment\": {{$json.enrichment}},\n  \"ai_review\": {{$json.ai_review}},\n  \"review_status\": \"approved\",\n  \"review_loop\": {\n    \"status\": \"queued_for_edit_or_rerun\",\n    \"reason\": \"Reviewer requested edits before handoff\",\n    \"rerun_allowed\": true,\n    \"next_step\": \"draft_recommendation\"\n  }\n}",
         "options": {}
       },
-      "id": "12fbbdd2-f4d8-44d4-93b4-ab2f61830a2b",
+      "id": "dc995209-d588-4236-9e0e-39f7db7d231c",
       "name": "Review / Rerun Queue",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2352,
-        1680
+        19936,
+        5616
       ]
     },
     {
@@ -144,26 +144,26 @@
         "jsonOutput": "={\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"dedupe_key\": \"{{$json.dedupe_key}}\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"lead\": {{$json.lead}},\n  \"enrichment\": {\n    \"status\": \"complete\",\n    \"source_count\": 3,\n    \"public_signal\": \"workflow systems and operations content\",\n    \"contact_quality\": \"reviewable\",\n    \"notes\": [\"public profile reviewed\", \"category hint confirmed\"]\n  },\n  \"review_status\": \"{{$json.review_status}}\",\n  \"rerun_requested\": {{$json.rerun_requested}}\n}",
         "options": {}
       },
-      "id": "70aa44a2-f668-4eed-827f-381c43bdb0d3",
+      "id": "b5a10073-6c66-46c8-9fc1-c6b573f0f2f1",
       "name": "Enrichment Stage",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1232,
-        1584
+        18816,
+        5520
       ]
     },
     {
       "parameters": {
         "jsCode": "return items.map(item => {\n  const summary = item.json.lead.profile_summary || '';\n  const sourceCount = item.json.enrichment.source_count || 0;\n  const confidence = summary.length > 20 && sourceCount >= 2 ? 0.86 : 0.52;\n  const fitTier = confidence >= 0.8 ? 'high' : 'review';\n  return {\n    json: {\n      ...item.json,\n      ai_review: {\n        fit_category: 'workflow_operator',\n        fit_tier: fitTier,\n        confidence,\n        reason_codes: ['ops_systems_signal', 'public_content_match'],\n        note: 'Example AI-analysis note for operator review.'\n      }\n    }\n  };\n});"
       },
-      "id": "ee455c70-9c4a-43b6-a2bd-cb039caa953a",
+      "id": "a61464eb-d273-4f37-b8b7-7136896e1a26",
       "name": "AI Fit Analysis",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1456,
-        1584
+        19040,
+        5520
       ]
     },
     {
@@ -172,13 +172,13 @@
         "jsonOutput": "={\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"lead\": {{$json.lead}},\n  \"dedupe_key\": \"{{$json.dedupe_key}}\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"enrichment\": {{$json.enrichment}},\n  \"ai_review\": {{$json.ai_review}},\n  \"draft_recommendation\": {\n    \"recommended_action\": \"approve_for_manual_outreach\",\n    \"message_angle\": \"reference public operations systems work\",\n    \"requires_operator_edit\": true\n  },\n  \"review_status\": \"{{$json.review_status}}\"\n}",
         "options": {}
       },
-      "id": "bffc795c-386b-431e-8bcd-188d547eac0b",
+      "id": "2ac409e8-d23d-4dc4-ab9e-d4bd3cedf33f",
       "name": "Draft Recommendation",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1680,
-        1584
+        19264,
+        5520
       ]
     },
     {
@@ -205,13 +205,13 @@
         },
         "options": {}
       },
-      "id": "f5f75407-87b0-4e24-8cca-227b7da288fc",
+      "id": "978ec544-f935-4873-851f-b219661c827b",
       "name": "Human Review Decision",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1904,
-        1520
+        19488,
+        5456
       ]
     },
     {
@@ -238,13 +238,13 @@
         },
         "options": {}
       },
-      "id": "0183a6f8-20b0-49e7-8b08-49d2570b62f0",
+      "id": "a674c516-b66c-4d40-aff6-57a963b8c3a5",
       "name": "Rejected?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        2128,
-        1520
+        19712,
+        5456
       ]
     },
     {
@@ -253,13 +253,13 @@
         "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"archived_rejected\",\n  \"reason\": \"Human reviewer rejected lead\",\n  \"ai_review\": {{$json.ai_review}}\n}",
         "options": {}
       },
-      "id": "6c65d0cc-206f-435b-96e3-cfc0f1bbca49",
+      "id": "19962bf0-5a1f-4f65-9743-9be696aface9",
       "name": "Archive Rejected Lead",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2352,
-        1424
+        19936,
+        5360
       ]
     },
     {
@@ -268,13 +268,13 @@
         "jsonOutput": "={\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"status\": \"approved_snapshot\",\n  \"idempotency_key\": \"{{$json.lead_id}}:approved\",\n  \"approved_at\": \"{{$now}}\",\n  \"lead\": {{$json.lead}},\n  \"enrichment\": {{$json.enrichment}},\n  \"ai_review\": {{$json.ai_review}},\n  \"draft_recommendation\": {{$json.draft_recommendation}}\n}",
         "options": {}
       },
-      "id": "fe7c9eee-665e-469f-a2d0-9c6b834f9760",
+      "id": "4c035f78-b553-421c-bcb0-d00d73fcb104",
       "name": "Approved Snapshot",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2144,
-        1200
+        19728,
+        5136
       ]
     },
     {
@@ -283,13 +283,13 @@
         "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"event_type\": \"outbound.delivered\",\n  \"event_status\": \"delivered\",\n  \"handoff_status\": \"queued\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"outbound_handoff_already_processed\": true,\n  \"idempotency_receipt_status\": \"recorded\",\n  \"idempotency_receipt_action\": \"outbound_handoff\"\n}",
         "options": {}
       },
-      "id": "473c84dd-9c81-4500-a560-9d60a2b2f102",
+      "id": "b3199379-c2a8-47f0-8f81-6df7eb76eaff",
       "name": "Delivery Event Example",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2944,
-        1200
+        20528,
+        5200
       ]
     },
     {
@@ -298,13 +298,13 @@
         "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"status\": \"lifecycle_completed\",\n  \"events_recorded\": [\"approved\", \"queued\", \"delivered\"],\n  \"reporting_sync\": \"recorded\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"outbound_handoff_already_processed\": true,\n  \"idempotency_receipt_status\": \"recorded\",\n  \"cancel_allowed\": true,\n  \"rerun_allowed\": true\n}",
         "options": {}
       },
-      "id": "791b54f6-9c79-4831-970a-6d1eaefd54b5",
+      "id": "5ab2f73a-7bbb-41b6-966f-e4017b3419dd",
       "name": "Lifecycle Completed",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3312,
-        1200
+        20896,
+        5200
       ]
     },
     {
@@ -317,10 +317,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        256,
-        832
+        17840,
+        4768
       ],
-      "id": "66a54fea-54c1-4f06-ac72-1fa67b75ba25",
+      "id": "3b1e4390-9918-4eb4-a7a3-3eaca1b8944c",
       "name": "Sticky Note"
     },
     {
@@ -333,10 +333,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1168,
-        832
+        18752,
+        4768
       ],
-      "id": "b450caaa-ae44-4085-be07-6087c59a8e6d",
+      "id": "db167eaf-2e33-4ee3-8b32-b2f7c476ae6e",
       "name": "Sticky Note1"
     },
     {
@@ -349,10 +349,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1424,
-        832
+        19008,
+        4768
       ],
-      "id": "486828af-b3db-48d6-9fbd-875686e9c36b",
+      "id": "83ef058c-1d17-4837-bf55-0843219dd043",
       "name": "Sticky Note3"
     },
     {
@@ -365,10 +365,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1824,
-        832
+        19408,
+        4768
       ],
-      "id": "7bc8080d-d6b2-4af9-96a8-df211046a7da",
+      "id": "7b565e7d-1291-429e-a6ed-e6c346272bf2",
       "name": "Sticky Note4"
     },
     {
@@ -381,10 +381,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2272,
-        832
+        19856,
+        4768
       ],
-      "id": "977a5103-24df-42d6-9791-311b28386583",
+      "id": "c3bcc7d5-d588-451a-a047-0e6380f05e82",
       "name": "Sticky Note5"
     },
     {
@@ -397,10 +397,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        256,
-        624
+        17840,
+        4560
       ],
-      "id": "4f38f100-e786-411b-88bf-0320838dccda",
+      "id": "190e21ef-6b8b-4df8-9e5d-a32eaa340708",
       "name": "Sticky Note6"
     },
     {
@@ -413,10 +413,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        720,
-        832
+        18304,
+        4768
       ],
-      "id": "1f1c0baf-e5d8-413c-a422-210d67bda33a",
+      "id": "5da3b9fe-9946-465e-99f8-9954fa2fac07",
       "name": "Sticky Note2"
     },
     {
@@ -447,10 +447,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2528,
-        1216
+        20128,
+        5184
       ],
-      "id": "ad7cd0d7-98d7-43c0-acda-18c502e53126",
+      "id": "964b16f6-d149-4921-9073-cf407bb7b15f",
       "name": "Idempotency Check"
     },
     {
@@ -459,13 +459,13 @@
         "jsonOutput": "={\n  \"lead_id\": \"{{$json.lead_id}}\",\n  \"batch_id\": \"{{$json.batch_id}}\",\n  \"handoff_status\": \"already_processed\",\n  \"side_effect_skipped\": true,\n  \"reason\": \"idempotency_key_already_processed\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}",
         "options": {}
       },
-      "id": "d936ccf7-f998-4680-a826-ac24e832f241",
+      "id": "4854442b-7f21-4680-b265-b767df4fd45e",
       "name": "Already processed",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2768,
-        1440
+        20336,
+        5040
       ]
     },
     {
@@ -490,13 +490,13 @@
         },
         "options": {}
       },
-      "id": "682c369f-0f5b-4f65-8e5a-3a7fbcade0cf",
+      "id": "fe776519-5f18-49f6-8315-f95f4826cc1b",
       "name": "Outbound Queue",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2768,
-        1200
+        20352,
+        5200
       ],
       "disabled": true
     },
@@ -518,13 +518,13 @@
         },
         "options": {}
       },
-      "id": "d7346378-a407-4d65-be99-1945826fae2d",
+      "id": "98024ec2-c4af-468a-a005-4d4f66e096e1",
       "name": "Reporting Sync",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3136,
-        1200
+        20720,
+        5200
       ],
       "disabled": true
     },
@@ -532,13 +532,13 @@
       "parameters": {
         "jsCode": "return items.map(item => {\n  const lead = item.json.lead || {};\n  const displayName = String(lead.display_name || '').trim();\n  const sourceRef = String(lead.source_ref || 'unknown_source').trim();\n  const dedupeKey = `${sourceRef}:${displayName}`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');\n  return {\n    json: {\n      ...item.json,\n      lead_id: 'lead_001',\n      lead: {\n        ...lead,\n        display_name: displayName,\n        contact_ref: lead.contact_ref || null\n      },\n      dedupe_key: dedupeKey,\n      idempotency_key: `lead_001:${dedupeKey}`,\n      normalized_at: new Date().toISOString()\n    }\n  };\n});"
       },
-      "id": "9cfaf881-c762-43be-8058-5f1b82671585",
+      "id": "65059838-5b79-498a-8242-365ccec4e2ee",
       "name": "Normalize + Idempotency Key",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        784,
-        1488
+        18368,
+        5424
       ]
     }
   ],
@@ -762,7 +762,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "b28487e3-4af9-44f9-813b-87feef8f17e0",
+  "versionId": "af5b696c-5b7b-4d02-a385-c9a27615538a",
   "meta": {
     "instanceId": "df0c66958e6dcb6dec6a2aeae8c97f4182927c1b00c5c0604afc59d5e6d0c089"
   },
