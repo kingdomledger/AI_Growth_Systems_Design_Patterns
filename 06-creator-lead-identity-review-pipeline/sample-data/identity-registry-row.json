@@ -1,0 +1,7 @@
+{
+  "uuid": "lead_uuid_001",
+  "identifier_type": "profile_url",
+  "identifier_value_norm": "https://social.example/example_creator",
+  "identifier_strength": "strong",
+  "source": "source_queue"
+}

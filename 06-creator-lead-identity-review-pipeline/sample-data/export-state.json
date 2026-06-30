@@ -1,0 +1,8 @@
+{
+  "uuid": "lead_uuid_001",
+  "destination_system": "example_destination",
+  "destination_ref": "qualified_creator_list",
+  "export_status": "exported",
+  "idempotency_key": "lead_uuid_001:example_destination:qualified_creator_list",
+  "duplicate_safe": true
+}

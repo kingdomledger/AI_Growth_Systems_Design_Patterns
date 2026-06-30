@@ -1,0 +1,8 @@
+{
+  "uuid": "lead_uuid_001",
+  "fit_tier": "high",
+  "confidence": 0.87,
+  "summary": "Strong public workflow-automation signal.",
+  "recommended_action": "review_for_export",
+  "human_review_status": "pending"
+}

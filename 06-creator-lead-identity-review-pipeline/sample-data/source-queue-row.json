@@ -1,0 +1,9 @@
+{
+  "source_item_id": "source_item_001",
+  "source_platform": "example_source",
+  "profile_url": "https://social.example/example_creator?ref=demo",
+  "handle": "@Example_Creator",
+  "display_name": "Example Creator",
+  "bio_summary": "Builds public tutorials about AI operations and workflow automation.",
+  "processing_status": "queued"
+}
