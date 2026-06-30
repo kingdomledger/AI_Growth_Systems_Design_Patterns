@@ -1,0 +1,9 @@
+{
+  "uuid": "lead_uuid_001",
+  "profile_url_norm": "https://social.example/example_creator",
+  "handle_norm": "example_creator",
+  "public_signals": {
+    "category": "workflow automation",
+    "bio_summary": "Builds public tutorials about AI operations."
+  }
+}

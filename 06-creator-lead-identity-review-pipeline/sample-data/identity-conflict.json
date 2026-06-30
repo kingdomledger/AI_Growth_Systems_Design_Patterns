@@ -1,0 +1,9 @@
+{
+  "conflict_id": "identity_conflict_001",
+  "identifier_type": "profile_url",
+  "identifier_value_norm": "https://social.example/example_creator",
+  "candidate_uuids": ["lead_uuid_001", "lead_uuid_009"],
+  "conflict_reason": "multiple_uuid_matches_for_strong_identifier",
+  "resolution_status": "unresolved",
+  "operator_action": "review_before_merge"
+}

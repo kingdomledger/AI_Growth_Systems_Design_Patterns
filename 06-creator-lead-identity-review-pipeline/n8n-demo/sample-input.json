@@ -1,0 +1,16 @@
+{
+  "queue_id": 1001,
+  "source_platform": "example_source",
+  "source_item_id": "source_item_001",
+  "profile_url": "https://social.example/example_creator?ref=demo",
+  "handle": "@Example_Creator",
+  "display_name": "Example Creator",
+  "bio_summary": "Builds public tutorials about AI operations and workflow automation.",
+  "scenario": {
+    "has_strong_identifier": true,
+    "registry_match_count": 1,
+    "candidate_uuids": ["lead_uuid_001"],
+    "human_review_status": "approved",
+    "already_exported": false
+  }
+}

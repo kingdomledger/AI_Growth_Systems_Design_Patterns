@@ -1,0 +1,8 @@
+{
+  "uuid": "lead_uuid_001",
+  "platform": "social_example",
+  "handle_norm": "example_creator",
+  "profile_url_norm": "https://social.example/example_creator",
+  "display_name": "Example Creator",
+  "identity_status": "resolved"
+}

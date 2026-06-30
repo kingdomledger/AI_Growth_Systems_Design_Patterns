@@ -1,0 +1,792 @@
+{
+  "name": "Creator Lead Identity Review Pipeline Demo",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# Public synthetic workflow\n\nThis demo does not include confidential company data, private workflows, credentials, client information, production screenshots, real lead records, private prompts, or private API endpoints.\n\nIt shows workflow design for SQL-backed identity resolution, local enrichment API separation, human review, operational handoff, and reliability.",
+        "height": 220,
+        "width": 4320,
+        "color": 3
+      },
+      "id": "268bee9d-7446-4cfc-bccc-56d5964c1737",
+      "name": "Public Safety Banner",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        112,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 1. SQL Source Queue\n\nRaw source rows are staged before becoming canonical leads.\n\nSource rows are import events, not identity truth.",
+        "height": 620,
+        "width": 430,
+        "color": 4
+      },
+      "id": "efd99793-d8fd-443e-85b7-e84cd5cab0de",
+      "name": "SQL Source Queue Lane",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        112,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 2. Identifier Normalization\n\nProfile URLs and handles are normalized before lookup.\n\nStrong identifiers can resolve identity. Weak attributes cannot auto-merge records.",
+        "height": 620,
+        "width": 500,
+        "color": 4
+      },
+      "id": "69b8c46b-05cc-41ba-8b93-8577f752dad1",
+      "name": "Identifier Normalization Lane",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        576,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 3. SQL Identity Registry\n\nStrong identifiers map to canonical UUIDs.\n\nUnique constraints prevent duplicate identity claims.",
+        "height": 620,
+        "width": 560,
+        "color": 4
+      },
+      "id": "18b60f29-e629-4ce9-bab5-de7c31756f1b",
+      "name": "SQL Identity Registry Lane",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 4. Conflict Handling\n\nAmbiguous matches are written to a conflict record.\n\nThe workflow does not silently merge multiple UUID matches.",
+        "height": 620,
+        "width": 560,
+        "color": 4
+      },
+      "id": "0fe2e126-6a3e-49e8-864f-a41f4a080a79",
+      "name": "Conflict Handling Lane",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 5. Local Enrichment API Adapter\n\nThe workflow calls enrichment through an API boundary instead of embedding all LLM logic directly in n8n.\n\nThis public demo uses a synthetic mock response contract.",
+        "height": 620,
+        "width": 544,
+        "color": 4
+      },
+      "id": "e6278b8d-0781-46ea-859d-0315ffa903f3",
+      "name": "Local API Lane",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2288,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 6. Human Review Gate\n\nAI enrichment is a draft recommendation.\n\nA reviewer approves, rejects, or returns the record for revision.",
+        "height": 620,
+        "width": 430,
+        "color": 4
+      },
+      "id": "38fa34c3-936f-48bb-8e49-5f6d6d20cbe0",
+      "name": "Human Review Lane",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2864,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 7. SQL Export State\n\nBefore handoff, the workflow checks whether this UUID has already been exported to the destination.\n\nDuplicate exports become no-op results.",
+        "height": 620,
+        "width": 620,
+        "color": 4
+      },
+      "id": "f8a327fb-60d8-4589-b032-676a69a17473",
+      "name": "SQL Export State Lane",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3328,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 8. Ops / Health Checks\n\nSynthetic checks summarize unresolved conflicts, approved-not-exported records, and duplicate export attempts.",
+        "height": 620,
+        "width": 440,
+        "color": 4
+      },
+      "id": "471c6ad7-b43a-4c3c-a05f-6537de443269",
+      "name": "Ops Checks Lane",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3984,
+        288
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "e652d57b-af97-4ed6-ab95-3ef07c9a3586",
+      "name": "Manual Demo Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        208,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"queue_id\": 1001,\n  \"source_platform\": \"example_source\",\n  \"source_item_id\": \"source_item_001\",\n  \"profile_url\": \"https://social.example/example_creator?ref=demo\",\n  \"handle\": \"@Example_Creator\",\n  \"display_name\": \"Example Creator\",\n  \"bio_summary\": \"Builds public tutorials about AI operations and workflow automation.\",\n  \"scenario\": {\n    \"has_strong_identifier\": true,\n    \"registry_match_count\": 1,\n    \"candidate_uuids\": [\"lead_uuid_001\"],\n    \"human_review_status\": \"approved\",\n    \"already_exported\": false\n  }\n}",
+        "options": {}
+      },
+      "id": "a4fa7173-f03f-4582-9eab-d8f7cae0f854",
+      "name": "Mock SQL Source Queue Row",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "function normalizeHandle(value) {\n  return value ? String(value).trim().replace(/^@+/, '').toLowerCase() : null;\n}\n\nfunction normalizeProfileUrl(value) {\n  if (!value) return null;\n  try {\n    const url = new URL(String(value).trim());\n    url.hash = '';\n    url.search = '';\n    url.pathname = url.pathname.replace(/\\/+$/, '') || '/';\n    return url.toString().replace(/\\/$/, '');\n  } catch {\n    return null;\n  }\n}\n\nreturn items.map(item => {\n  const profileUrlNorm = normalizeProfileUrl(item.json.profile_url);\n  const handleNorm = normalizeHandle(item.json.handle);\n  const strongIdentifiers = [\n    profileUrlNorm ? { type: 'profile_url', value: profileUrlNorm, strength: 'strong' } : null,\n    handleNorm ? { type: 'platform_handle', value: handleNorm, strength: 'strong' } : null,\n  ].filter(Boolean);\n\n  return {\n    json: {\n      ...item.json,\n      identity: {\n        profile_url_norm: profileUrlNorm,\n        handle_norm: handleNorm,\n        strong_identifiers: strongIdentifiers,\n        weak_attributes: {\n          display_name: item.json.display_name,\n          bio_summary: item.json.bio_summary,\n        },\n        has_strong_identifier: strongIdentifiers.length > 0,\n      }\n    }\n  };\n});"
+      },
+      "id": "9e974f12-1d38-4173-be81-94a1c42061ec",
+      "name": "Normalize Identifier Fields",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "has-strong-identifier",
+              "leftValue": "={{$json.identity.has_strong_identifier}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "299efb87-e606-4808-954e-0ec58e1e7138",
+      "name": "Has Strong Identifier?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        912,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"queue_id\": {{$json.queue_id}},\n  \"source_queue_status\": \"skipped\",\n  \"reason\": \"No usable strong identifier\",\n  \"operator_action\": \"repair_source_record\"\n}",
+        "options": {}
+      },
+      "id": "c7ab8ba2-c112-42d6-bee6-faa588c094f2",
+      "name": "Skipped / Source Repair",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1168,
+        736
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const matchCount = item.json.scenario?.registry_match_count ?? 0;\n  const candidateUuids = item.json.scenario?.candidate_uuids ?? [];\n\n  return {\n    json: {\n      ...item.json,\n      identity: {\n        ...item.json.identity,\n        registry_match_count: matchCount,\n        candidate_uuids: candidateUuids,\n        resolution_status: matchCount === 0\n          ? 'no_match'\n          : matchCount === 1\n            ? 'single_uuid_match'\n            : 'multiple_uuid_conflict',\n      }\n    }\n  };\n});"
+      },
+      "id": "be9a7f6c-cbb8-48c0-8e6a-62434bda745e",
+      "name": "Mock SQL Identity Registry Lookup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "multiple-uuid-matches",
+              "leftValue": "={{$json.identity.registry_match_count > 1}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "55fdb561-520b-4e6e-a5f4-b5eec545240e",
+      "name": "Multiple UUID Matches?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"queue_id\": {{$json.queue_id}},\n  \"source_queue_status\": \"conflict\",\n  \"identifier_type\": \"profile_url\",\n  \"identifier_value_norm\": \"{{$json.identity.profile_url_norm}}\",\n  \"candidate_uuids\": {{$json.identity.candidate_uuids}},\n  \"conflict_reason\": \"multiple_uuid_matches_for_strong_identifier\",\n  \"resolution_status\": \"unresolved\",\n  \"operator_action\": \"review_before_merge\"\n}",
+        "options": {}
+      },
+      "id": "87e146ec-9f5d-4eeb-916a-b45aebefb2a9",
+      "name": "Create Identity Conflict Record",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1728,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "existing-uuid",
+              "leftValue": "={{$json.identity.registry_match_count === 1}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9c1cfc02-d54d-4bfb-ad2f-beb0ea74a341",
+      "name": "Existing UUID?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1728,
+        672
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"queue_id\": {{$json.queue_id}},\n  \"source_queue_status\": \"existing\",\n  \"identity_resolution\": \"single_uuid_match\",\n  \"canonical_uuid\": \"{{$json.identity.candidate_uuids[0]}}\",\n  \"registry_records_written\": 0,\n  \"conflict_records_written\": 0,\n  \"identity\": {{$json.identity}}\n}",
+        "options": {}
+      },
+      "id": "9c7428e2-c37f-4fbd-9717-0ed1f51d1520",
+      "name": "Attach Existing Canonical Lead",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1984,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"queue_id\": {{$json.queue_id}},\n  \"source_queue_status\": \"processed\",\n  \"identity_resolution\": \"new_canonical_lead\",\n  \"canonical_uuid\": \"lead_uuid_001\",\n  \"registry_records_written\": {{$json.identity.strong_identifiers.length}},\n  \"conflict_records_written\": 0,\n  \"identity\": {{$json.identity}}\n}",
+        "options": {}
+      },
+      "id": "00c14527-851f-44ef-acdd-b495435eb515",
+      "name": "Create Canonical Lead",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1984,
+        736
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"uuid\": \"{{$json.canonical_uuid}}\",\n  \"profile_url_norm\": \"{{$json.identity.profile_url_norm}}\",\n  \"handle_norm\": \"{{$json.identity.handle_norm}}\",\n  \"public_signals\": {\n    \"category\": \"workflow automation\",\n    \"bio_summary\": \"Builds public tutorials about AI operations.\"\n  },\n  \"source_queue_status\": \"{{$json.source_queue_status}}\",\n  \"identity_resolution\": \"{{$json.identity_resolution}}\",\n  \"registry_records_written\": {{$json.registry_records_written}},\n  \"conflict_records_written\": {{$json.conflict_records_written}},\n  \"scenario\": {\n    \"human_review_status\": \"approved\",\n    \"already_exported\": false\n  }\n}",
+        "options": {}
+      },
+      "id": "269d8cdf-2cb2-4759-a2a6-0483f12d070b",
+      "name": "Prepare Enrichment Request",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2336,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const signals = `${item.json.public_signals?.category || ''} ${item.json.public_signals?.bio_summary || ''}`.toLowerCase();\n  const strongSignal = /workflow|automation|operations|ops/.test(signals);\n\n  return {\n    json: {\n      ...item.json,\n      enrichment: {\n        status: 'drafted',\n        contract_version: 'public-demo-v1',\n        fit_tier: strongSignal ? 'high' : 'review',\n        confidence: strongSignal ? 0.87 : 0.54,\n        summary: strongSignal\n          ? 'Strong public workflow-automation signal.'\n          : 'Needs operator review before qualification.',\n        recommended_action: strongSignal ? 'review_for_export' : 'hold_for_review',\n        human_review_status: item.json.scenario?.human_review_status || 'pending',\n      }\n    }\n  };\n});"
+      },
+      "id": "4d73f6a0-a45a-4494-97d9-8a6ba399a80c",
+      "name": "Local Enrichment API Adapter Mock",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2528,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const enrichment = item.json.enrichment || {};\n  const valid = Boolean(item.json.uuid && enrichment.fit_tier && typeof enrichment.confidence === 'number');\n\n  return {\n    json: {\n      ...item.json,\n      enrichment_validation: valid ? 'valid' : 'needs_review',\n      human_review_status: enrichment.human_review_status || 'pending',\n    }\n  };\n});"
+      },
+      "id": "4a285502-ccc1-45e9-b4ac-44cb6e1e554c",
+      "name": "Validate Enrichment Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2720,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "human-review-approved",
+              "leftValue": "={{$json.human_review_status === \"approved\"}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3cb9cd53-ff76-4466-9f42-353cf6e6763e",
+      "name": "Human Review Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3072,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"uuid\": \"{{$json.uuid}}\",\n  \"enrichment_status\": \"{{$json.enrichment.status}}\",\n  \"human_review_status\": \"{{$json.human_review_status}}\",\n  \"export_status\": \"held\",\n  \"operator_action\": \"review_or_revision_required\"\n}",
+        "options": {}
+      },
+      "id": "bd9774c2-d9a5-4a0e-a519-6d216a2cad6b",
+      "name": "Hold / Revision Queue",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3376,
+        752
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const destinationSystem = 'example_destination';\n  const destinationRef = 'qualified_creator_list';\n  const idempotencyKey = `${item.json.uuid}:${destinationSystem}:${destinationRef}`;\n\n  return {\n    json: {\n      ...item.json,\n      destination_system: destinationSystem,\n      destination_ref: destinationRef,\n      idempotency_key: idempotencyKey,\n      already_exported: Boolean(item.json.scenario?.already_exported),\n    }\n  };\n});"
+      },
+      "id": "dde53419-d6a7-44e4-99dc-d903456c462c",
+      "name": "SQL Export Eligibility Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3376,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "already-exported",
+              "leftValue": "={{$json.already_exported}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5d9f3071-4fa5-4406-89af-33c7f94fd6fd",
+      "name": "Already Exported?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3584,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"uuid\": \"{{$json.uuid}}\",\n  \"destination_system\": \"{{$json.destination_system}}\",\n  \"destination_ref\": \"{{$json.destination_ref}}\",\n  \"export_status\": \"duplicate_noop\",\n  \"duplicate_safe\": true,\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}",
+        "options": {}
+      },
+      "id": "e8527d80-6b1c-4689-8889-e00f95a7b57f",
+      "name": "Duplicate-Safe No-op",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3824,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"uuid\": \"{{$json.uuid}}\",\n  \"destination_system\": \"{{$json.destination_system}}\",\n  \"destination_ref\": \"{{$json.destination_ref}}\",\n  \"handoff_status\": \"queued\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\"\n}",
+        "options": {}
+      },
+      "id": "ad2e0af7-90ac-42a7-8bb0-dc54ed5974eb",
+      "name": "Mock Destination Handoff",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3824,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"uuid\": \"{{$json.uuid}}\",\n  \"destination_system\": \"{{$json.destination_system}}\",\n  \"destination_ref\": \"{{$json.destination_ref}}\",\n  \"export_status\": \"exported\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"duplicate_safe\": true\n}",
+        "options": {}
+      },
+      "id": "1c70c85a-f579-4dad-8df2-4ec2696aad81",
+      "name": "Write SQL Export State",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4064,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"source_queue_status\": \"processed\",\n  \"identity_resolution\": \"single_uuid_match\",\n  \"canonical_uuid\": \"{{$json.uuid}}\",\n  \"registry_records_written\": 2,\n  \"conflict_records_written\": 0,\n  \"enrichment_status\": \"drafted\",\n  \"human_review_status\": \"approved\",\n  \"export_status\": \"{{$json.export_status}}\",\n  \"idempotency_key\": \"{{$json.idempotency_key}}\",\n  \"duplicate_safe\": true,\n  \"ops_summary\": {\n    \"unresolved_conflicts\": 0,\n    \"approved_not_exported\": 0,\n    \"duplicate_export_attempts\": 0\n  }\n}",
+        "options": {}
+      },
+      "id": "e4ee4a00-d95e-4d51-9893-ab85fc441a72",
+      "name": "Lifecycle Completed",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4256,
+        640
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Demo Trigger": {
+      "main": [
+        [
+          {
+            "node": "Mock SQL Source Queue Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock SQL Source Queue Row": {
+      "main": [
+        [
+          {
+            "node": "Normalize Identifier Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Identifier Fields": {
+      "main": [
+        [
+          {
+            "node": "Has Strong Identifier?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Strong Identifier?": {
+      "main": [
+        [
+          {
+            "node": "Mock SQL Identity Registry Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skipped / Source Repair",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock SQL Identity Registry Lookup": {
+      "main": [
+        [
+          {
+            "node": "Multiple UUID Matches?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Multiple UUID Matches?": {
+      "main": [
+        [
+          {
+            "node": "Create Identity Conflict Record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Existing UUID?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Existing UUID?": {
+      "main": [
+        [
+          {
+            "node": "Attach Existing Canonical Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Canonical Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attach Existing Canonical Lead": {
+      "main": [
+        [
+          {
+            "node": "Prepare Enrichment Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Canonical Lead": {
+      "main": [
+        [
+          {
+            "node": "Prepare Enrichment Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Enrichment Request": {
+      "main": [
+        [
+          {
+            "node": "Local Enrichment API Adapter Mock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Local Enrichment API Adapter Mock": {
+      "main": [
+        [
+          {
+            "node": "Validate Enrichment Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Enrichment Response": {
+      "main": [
+        [
+          {
+            "node": "Human Review Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Human Review Approved?": {
+      "main": [
+        [
+          {
+            "node": "SQL Export Eligibility Check",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Hold / Revision Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL Export Eligibility Check": {
+      "main": [
+        [
+          {
+            "node": "Already Exported?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Already Exported?": {
+      "main": [
+        [
+          {
+            "node": "Duplicate-Safe No-op",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mock Destination Handoff",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Destination Handoff": {
+      "main": [
+        [
+          {
+            "node": "Write SQL Export State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write SQL Export State": {
+      "main": [
+        [
+          {
+            "node": "Lifecycle Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "173b44a8-bd0a-44fa-a8b3-25782dbb4a0d",
+  "meta": {
+    "instanceId": "df0c66958e6dcb6dec6a2aeae8c97f4182927c1b00c5c0604afc59d5e6d0c089"
+  },
+  "nodeGroups": [],
+  "id": "trBGJbdWlHrOV6LF",
+  "tags": []
+}
