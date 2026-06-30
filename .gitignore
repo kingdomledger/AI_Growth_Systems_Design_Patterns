@@ -1,13 +1,11 @@
 .env
 .env.*
 !.env.example
-
 node_modules/
 .venv/
 __pycache__/
 .pytest_cache/
 .DS_Store
-
 *.xlsx
 *.xls
 *.pdf
@@ -25,7 +23,7 @@ __pycache__/
 !01-member-onboarding-automation/n8n-demo/n8n-workflow-snapshot.png
 !02-lead-enrichment-outreach-system/n8n-demo/n8n-workflow-snapshot.png
 !05-workflow-reliability-error-handling/n8n-demo/n8n-workflow-snapshot.png
-
+!06-creator-lead-identity-review-pipeline/n8n-demo/n8n-workflow-snapshot.png
 output/
 outputs/
 state/
