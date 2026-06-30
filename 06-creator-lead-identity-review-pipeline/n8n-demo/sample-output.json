@@ -1,0 +1,17 @@
+{
+  "source_queue_status": "processed",
+  "identity_resolution": "single_uuid_match",
+  "canonical_uuid": "lead_uuid_001",
+  "registry_records_written": 2,
+  "conflict_records_written": 0,
+  "enrichment_status": "drafted",
+  "human_review_status": "approved",
+  "export_status": "exported",
+  "idempotency_key": "lead_uuid_001:example_destination:qualified_creator_list",
+  "duplicate_safe": true,
+  "ops_summary": {
+    "unresolved_conflicts": 0,
+    "approved_not_exported": 0,
+    "duplicate_export_attempts": 0
+  }
+}
