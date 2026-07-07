@@ -36,3 +36,7 @@ Do not include browser chrome, sidebars, workspace names, execution data panels,
 - [`workflow.json`](./workflow.json): importable synthetic workflow
 - [`sample-input.json`](./sample-input.json): mock source queue input
 - [`sample-output.json`](./sample-output.json): mock lifecycle output
+
+## Video Walkthrough 
+
+- https://www.loom.com/share/e119cb13fd9f4e7f9d587ed3d2616882
