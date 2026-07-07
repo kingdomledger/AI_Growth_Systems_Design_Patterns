@@ -25,10 +25,6 @@ It demonstrates how a workflow can orchestrate a SQL-backed identity and review 
 4. Take a clean screenshot of the full workflow.
 5. Save it as:
 
-```text
-06-creator-lead-identity-review-pipeline/n8n-demo/n8n-workflow-snapshot.png
-```
-
 Do not include browser chrome, sidebars, workspace names, execution data panels, credentials, or real data in the screenshot.
 
 ## Files
