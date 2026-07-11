@@ -280,3 +280,7 @@ This public case study does not include:
 - client or company data
 
 The implementation is intentionally synthetic, but the architecture mirrors the real class of problem: SQL-backed workflow state, identity safety, AI enrichment, human review, and duplicate-safe handoff.
+
+## N8N Video Walkthrough 
+
+- https://www.loom.com/share/e119cb13fd9f4e7f9d587ed3d2616882
