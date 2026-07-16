@@ -9,7 +9,7 @@ A workflow for turning rough lead inputs into enriched, reviewed, handoff-ready 
 - Covers approval snapshots, queue handoff, events, replies, cancellation, and reruns
 
 ## Outcome
-- Maintained enrichment costs between USD 0.03 and USD 0.05 per lead, or up to approximately USD 75 per 1,500-lead batch
+- Maintained enrichment costs between USD 0.03 and USD 0.07 per lead, or up to approximately USD 75 per 1,500-lead batch
 - Generated a 3–5% reply rate, equivalent to approximately 45–75 replies per 1,500 leads contacted
 - Achieved a 1.4% visit rate, equivalent to approximately 21 visits per 1,500 leads
 
