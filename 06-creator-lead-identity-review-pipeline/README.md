@@ -8,6 +8,14 @@ This case study focuses on identity safety: separating raw source rows from cano
 
 Many lead workflows start as spreadsheets because spreadsheets are fast for prototypes and human review. That is useful early, but it becomes fragile when the system needs durable identity, reruns, audit logs, conflict handling, and duplicate-safe handoff.
 
+## Outcome
+- Processed and supported outreach to 1,500+ leads per week
+- Reduced manual processing time by approximately three minutes per lead
+- Saved an estimated 75+ hours of operational work per week at a volume of 1,500 leads
+- Maintained enrichment costs between USD 0 and USD 0.05 per lead, or up to approximately USD 75 per 1,500-lead batch
+- Generated a 3–5% reply rate, equivalent to approximately 45–75 replies per 1,500 leads contacted
+- Achieved a 1.4% visit rate, equivalent to approximately 21 visits per 1,500 leads
+
 This pattern uses:
 
 - n8n for orchestration
