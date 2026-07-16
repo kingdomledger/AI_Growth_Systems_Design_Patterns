@@ -11,7 +11,7 @@ A workflow for turning member applications into reviewed access decisions, with 
 ## Outcome
 - Handled 6,800+ records in live production
 - Saved approximately three minutes of manual processing per record
-- Eliminated an estimated 340+ hours of repetitive operational work—equivalent to more than 42 eight-hour workdays
+- Eliminated an estimated 340+ hours of repetitive operational work-equivalent to more than 42 eight-hour workdays
 
 ## Architecture
 
