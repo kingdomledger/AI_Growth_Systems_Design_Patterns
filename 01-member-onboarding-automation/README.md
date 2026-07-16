@@ -8,6 +8,11 @@ A workflow for turning member applications into reviewed access decisions, with 
 - Covers approve, reject, revoke, and admin override states
 - Connects review decisions to access provisioning, notification, and audit records
 
+## Outcome
+- Handled 6,800+ records in live production
+- Saved approximately three minutes of manual processing per record
+- Eliminated an estimated 340+ hours of repetitive operational work—equivalent to more than 42 eight-hour workdays
+
 ## Architecture
 
 ```mermaid
